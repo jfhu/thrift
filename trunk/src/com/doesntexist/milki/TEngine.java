@@ -2,7 +2,7 @@ package com.doesntexist.milki;
 
 import java.util.ArrayList;
 
-public class ThriftEngine {
+public class TEngine {
 	private ArrayList<TEntry> data;
 	
 	public void ThriftEngine() {
