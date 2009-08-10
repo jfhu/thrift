@@ -1,5 +1,15 @@
 package com.doesntexist.milki;
 
-public class ThriftEngine {
+import java.util.ArrayList;
 
+public class ThriftEngine {
+	private ArrayList<TEntry> data;
+	
+	public void ThriftEngine() {
+		getData();
+	}
+	
+	private void getData() {
+		
+	}
 }
