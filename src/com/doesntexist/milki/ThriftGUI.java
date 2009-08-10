@@ -10,6 +10,8 @@ public class ThriftGUI extends JFrame {
 	private static final int width = 1000;
 	private static final int height = 700;
 	
+	TEngine engine = new TEngine();
+	
 	public ThriftGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(title);
