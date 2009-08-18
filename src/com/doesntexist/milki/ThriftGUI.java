@@ -4,11 +4,16 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class ThriftGUI extends JFrame {
 	private static String title = new String("Thrift - The simplest money logger on the earth.");
 	private static final int width = 1000;
 	private static final int height = 700;
+	
+	private JPanel dateSelector = new JPanel();
+	private JPanel pieChart = new JPanel();
+	private JPanel entryList = new JPanel();
 	
 	TEngine engine = new TEngine();
 	
