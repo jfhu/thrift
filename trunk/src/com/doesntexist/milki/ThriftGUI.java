@@ -2,6 +2,7 @@ package com.doesntexist.milki;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,8 +15,9 @@ public class ThriftGUI extends JFrame {
 	private JPanel dateSelector = new JPanel();
 	private JPanel pieChart = new JPanel();
 	private JPanel entryList = new JPanel();
+	private JPanel statusBar = new JPanel();
 	
-	TEngine engine = new TEngine();
+	private static Engine engine;
 	
 	public ThriftGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,7 +33,9 @@ public class ThriftGUI extends JFrame {
 	}
 
 	private void setPanels() {
-	
+		dateSelector.add(engine.getCalendar());
+		
+		add(dateSelector);
 	}
 	
 	private void setMenus() {
@@ -39,8 +43,8 @@ public class ThriftGUI extends JFrame {
 	}
 	
 	public static void createAndShowGUI() {
-		@SuppressWarnings("unused")
-		ThriftGUI main = new ThriftGUI();
+		engine = new Engine();
+		new ThriftGUI();
 	}
 	
 	public static void main(String[] args) {
