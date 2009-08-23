@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class ThriftGUI extends JFrame {
 	private static String title = new String("Thrift - The simplest money logger on the earth.");
@@ -50,6 +52,14 @@ public class ThriftGUI extends JFrame {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				if (System.getProperty("os.name").contains("Mac")) {
+					Utilities.log("Change to Mac look and feel.");
+					try {
+						UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
 				createAndShowGUI();
 			}
 		});

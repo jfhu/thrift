@@ -1,19 +1,22 @@
 package com.doesntexist.milki;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.rmi.CORBA.Util;
 
-
-public class ExchangeRate {
-	private String date = new String();
-	private String rate = new String();
+public class ExchangeRate implements Runnable {
+	private static int delay;
+	private static String date = new String();
+	private static String rate = new String();
+	
+	private String amountStr = new String("100");
+	private String fromStr = new String("CAD");
+	private String toStr = new String("CNY");
 	
 //	public String getContent(String strUrl) {
 //		try {
@@ -55,7 +58,7 @@ public class ExchangeRate {
 			URLConnection connection = url.openConnection();
 			connection.setDoOutput(true);
 			OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "8859_1");
-			out.write("Amount=100&From=CAD&To=CNY&image.x=16&image.y=11&image=Submit");
+			out.write("Amount=" + amountStr +"&From=" + fromStr + "&To=" + toStr + "&image.x=16&image.y=11&image=Submit");
 			out.flush();
 			out.close();
 			
@@ -77,7 +80,7 @@ public class ExchangeRate {
 					sCurrentLine = l_reader.readLine();
 					rate = sCurrentLine.substring(
 												sCurrentLine.indexOf("\"XE\">") + 5, 
-												sCurrentLine.lastIndexOf("CNY<!--"));
+												sCurrentLine.lastIndexOf(toStr + "<!--"));
 					sTotalString = date + " " + rate;
 					break;
 				}
@@ -99,11 +102,24 @@ public class ExchangeRate {
 		return rate;
 	}
 
-	public ExchangeRate() {
+	public ExchangeRate(int delay) {
+		ExchangeRate.delay = delay;
 	}
 	
 	public static void main(String[] Args) {
-		ExchangeRate er = new ExchangeRate(); 
-		System.out.println(er.getContent());
+		ExchangeRate er = new ExchangeRate(3000);
+		Thread thread1 = new Thread(er);
+		thread1.start();
+	}
+
+	public void run() {
+		while (true) {
+			try {
+				Utilities.log(getContent());
+				Thread.sleep(delay);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
