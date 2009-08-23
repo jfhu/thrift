@@ -1,7 +1,5 @@
 package com.doesntexist.milki;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,40 +7,31 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 
-import javax.swing.Timer;
-
-public class Engine implements ActionListener {
+public class Engine {
 	File fileNameData = new File("entryData.data");
 	File fileNamePreference = new File("config.pref");
-	private int optionGetExchangeRateDelay = 3000;
+	private int optionGetExchangeRateDelay = 30000;
 	
 	private ArrayList<Entry> data = new ArrayList<Entry>();
-	private ExchangeRate exchangeRate = new ExchangeRate();
-	private Timer timer;
-	private JCalendar calendar = new JCalendar();
+	private ExchangeRate exchangeRate = new ExchangeRate(optionGetExchangeRateDelay);
+	Thread threadExchangeRate = new Thread(exchangeRate);
+	private JCalendar calendar;
 	
 	public Engine() {
+		calendar = new JCalendar();
+		 
 		try {
 			loadPreferences();
 			loadData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			log("Error loading file.");
+			Utilities.log("Error loading file.");
 			data.clear();
 		}
 		
-		startTimer();
-		
-		try {
-			saveData();
-			savePreference();
-		} catch (IOException e) {
-			log("Error saving file.");
-		}
+		threadExchangeRate.start();
 	}
 	
 	private void loadPreferences() throws IOException, ClassNotFoundException {
@@ -80,12 +69,6 @@ public class Engine implements ActionListener {
 		Collections.sort(data);
 	}
 	
-	private void startTimer() {
-		timer  = new Timer(optionGetExchangeRateDelay, this);
-		timer.setInitialDelay(0);
-		timer.start();
-	}
-	
 	public void addEntry(Entry o) {
 		data.add(o);
 		sortData();
@@ -97,18 +80,5 @@ public class Engine implements ActionListener {
 	
 	public JCalendar getCalendar() {
 		return calendar;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == timer) {
-			log(exchangeRate.getContent());
-		}
-	}
-	
-	public void log(String words) {
-		Calendar now=Calendar.getInstance();
-		String time=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
-		+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+ now.get(Calendar.SECOND);
-		System.out.println("[" + time + "] " + words);
 	}
 }
