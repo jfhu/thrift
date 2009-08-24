@@ -1,50 +1,122 @@
+/**
+ * @author milki
+ */
 package com.doesntexist.milki;
 
 import java.util.Date;
 
-public class Entry implements Comparable<Entry>{
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Entry.
+ */
+public class Entry implements Comparable<Entry> {
+	
+	/** The valid. */
 	private boolean valid;
+	
+	/** The account id. */
 	private String accountId;
+	
+	/** The category id. */
 	private String categoryId;
+	
+	/** The amount. */
 	private int amount;
+	
+	/** The currency id. */
 	private String currencyId;
+	
+	/** The remark. */
 	private String remark;
+	
+	/** The date. */
 	private Date date;
 	
-	public boolean isValid() {
+	/**
+	 * Checks if is valid.
+	 * 
+	 * @return true, if is valid
+	 */
+	public final boolean isValid() {
 		return valid;
 	}
 
-	public void setValid(boolean valid) {
+	/**
+	 * Sets the valid.
+	 * 
+	 * @param valid the new valid
+	 */
+	public final void setValid(final boolean valid) {
 		this.valid = valid;
 	}
 
-	public String getAccountId() {
+	/**
+	 * Gets the account id.
+	 * 
+	 * @return the account id
+	 */
+	public final String getAccountId() {
 		return accountId;
 	}
 
-	public String getCategoryId() {
+	/**
+	 * Gets the category id.
+	 * 
+	 * @return the category id
+	 */
+	public final String getCategoryId() {
 		return categoryId;
 	}
 
-	public int getAmount() {
+	/**
+	 * Gets the amount.
+	 * 
+	 * @return the amount
+	 */
+	public final int getAmount() {
 		return amount;
 	}
 
-	public String getCurrencyId() {
+	/**
+	 * Gets the currency id.
+	 * 
+	 * @return the currency id
+	 */
+	public final String getCurrencyId() {
 		return currencyId;
 	}
 
-	public String getRemark() {
+	/**
+	 * Gets the remark.
+	 * 
+	 * @return the remark
+	 */
+	public final String getRemark() {
 		return remark;
 	}
 
-	public Date getDate() {
+	/**
+	 * Gets the date.
+	 * 
+	 * @return the date
+	 */
+	public final Date getDate() {
 		return date;
 	}
 
-	public Entry(boolean valid, String accountId, String categoryId,
-			int amount, String currencyId, String remark, Date date) {
+	/**
+	 * Instantiates a new entry.
+	 * 
+	 * @param valid the valid
+	 * @param accountId the account id
+	 * @param categoryId the category id
+	 * @param amount the amount
+	 * @param currencyId the currency id
+	 * @param remark the remark
+	 * @param date the date
+	 */
+	public Entry(final boolean valid, final String accountId, final String categoryId,
+			final int amount, final String currencyId, final String remark, final Date date) {
 		this.valid = valid;
 		this.accountId = accountId;
 		this.categoryId = categoryId;
@@ -54,11 +126,18 @@ public class Entry implements Comparable<Entry>{
 		this.date = date;
 	}
 
-	public int compareTo(Entry o) {
-		if (date.before(o.getDate()))
+	/**
+	 * Compare to.
+	 * @param o the o
+	 * @return the int
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public final int compareTo(final Entry o) {
+		if (date.before(o.getDate())) {
 			return 1;
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 }

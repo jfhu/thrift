@@ -1,3 +1,6 @@
+/**
+ * @author milki
+ */
 package com.doesntexist.milki;
 
 import java.awt.BorderLayout;
@@ -8,6 +11,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -30,64 +34,103 @@ import javax.swing.UIManager;
  * </p>
  * <p>
  * Description: 操作日期
- * </p>
+ * </p>.
  * 
  * @author duxu2004
- * @version 1.0.1
+ * @author milki
  */
 
 class JCalendar extends JPanel {
 	// 动态表示年月日
+	/** The year. */
 	private int year = 0;
+	
+	/** The month. */
 	private int month = 0;
+	
+	/** The day. */
 	private int day = 0;
 	// 主面板
-	private JPanel Main = new JPanel();
+	/** The Main. */
+	private JPanel main = new JPanel();
 	// 日面板
+	/** The j panel day. */
 	private JPanel jPanelDay = new JPanel();
 	// 月面板
+	/** The j panel month. */
 	private JPanel jPanelMonth = new JPanel();
 	// 年的输入位置
-	private JTextField Year = new JTextField();
+	/** The Year. */
+	private JTextField jYear = new JTextField();
 	// 月的输入位置
-	private JTextField Month = new JTextField();
+	/** The Month. */
+	private JTextField jMonth = new JTextField();
 	// 减少月份
-	private JButton MonthDown = new JButton();
+	/** The Month down. */
+	private JButton jMonthDown = new JButton();
 	// 增加月份
-	private JButton MonthUp = new JButton();
+	/** The Month up. */
+	private JButton jMonthUp = new JButton();
 
+	/** The j panel button. */
 	private JPanel jPanelButton = new JPanel();
 	// 减少年份
-	private JButton YearDown = new JButton();
+	/** The Year down. */
+	private JButton jYearDown = new JButton();
 	// 增加年份
-	private JButton YearUp = new JButton();
+	/** The Year up. */
+	private JButton jYearUp = new JButton();
 	// 显示日期的位置
-	private JLabel Out = new JLabel();
+	/** The Out. */
+	private JLabel jOut = new JLabel();
 	// 中国时区，以后可以从这里扩展可以设置时区的功能
+	/** The l. */
 	private Locale l = Locale.CHINESE;
 	// 主日历
+	/** The cal. */
 	private GregorianCalendar cal = new GregorianCalendar(l);
 	// 星期面板
+	/** The week panel. */
 	private JPanel weekPanel = new JPanel();
 	// 天按钮组
+	/** The days. */
 	private JToggleButton[] days = new JToggleButton[42];
 	// 天面板
-	private JPanel Days = new JPanel();
+	/** The Days. */
+	private JPanel jDays = new JPanel();
 	// 标示
+	/** The j label1. */
 	private JLabel jLabel1 = new JLabel();
+	
+	/** The j label2. */
 	private JLabel jLabel2 = new JLabel();
+	
+	/** The j label3. */
 	private JLabel jLabel3 = new JLabel();
+	
+	/** The j label4. */
 	private JLabel jLabel4 = new JLabel();
+	
+	/** The j label5. */
 	private JLabel jLabel5 = new JLabel();
+	
+	/** The j label6. */
 	private JLabel jLabel6 = new JLabel();
+	
+	/** The j label7. */
 	private JLabel jLabel7 = new JLabel();
 	// 当前选择的天数按钮
-	private JToggleButton cur = null;
+	/** The cur. */
+	//private JToggleButton cur = null;
 	// 月份天数数组，用来取得当月有多少天
 	// 1 2 3 4 5 6 7 8 9 10 11 12
+	/** The days for each month. */
 	private int[] mm = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 	// 空日期构造函数
+	/**
+	 * Instantiates a new j calendar.
+	 */
 	public JCalendar() {
 		try {
 			jbInit();
@@ -97,8 +140,15 @@ class JCalendar extends JPanel {
 
 	}
 
-	// 带日期设置的构造函数
-	public JCalendar(int year, int month, int day) {
+	/**
+	 * Instantiates a new j calendar.
+	 * 带日期设置的构造函数
+	 * 
+	 * @param year the year
+	 * @param month the month
+	 * @param day the day
+	 */
+	public JCalendar(final int year, final int month, final int day) {
 		cal.set(year, month, day);
 		try {
 			jbInit();
@@ -107,8 +157,13 @@ class JCalendar extends JPanel {
 		}
 	}
 
-	// 带日历输入的构造函数
-	public JCalendar(GregorianCalendar calendar) {
+	/**
+	 * Instantiates a new j calendar.
+	 * 带日历输入的构造函数
+	 * 
+	 * @param calendar the calendar
+	 */
+	public JCalendar(final GregorianCalendar calendar) {
 		cal = calendar;
 		try {
 			jbInit();
@@ -117,8 +172,13 @@ class JCalendar extends JPanel {
 		}
 	}
 
-	// 带日期输入的构造函数
-	public JCalendar(Date date) {
+	/**
+	 * Instantiates a new j calendar.
+	 * 带日期输入的构造函数
+	 * 
+	 * @param date the date
+	 */
+	public JCalendar(final Date date) {
 		cal.setTime(date);
 		try {
 			jbInit();
@@ -127,7 +187,11 @@ class JCalendar extends JPanel {
 		}
 	}
 
-	// 初始化组件
+	/**
+	 * 初始化组件.
+	 * 
+	 * @throws Exception the exception
+	 */
 	private void jbInit() throws Exception {
 		// 初始化年、月、日
 		iniCalender();
@@ -138,15 +202,15 @@ class JCalendar extends JPanel {
 		this.setMinimumSize(new Dimension(200, 200));
 		this.setPreferredSize(new Dimension(200, 200));
 
-		Main.setLayout(new BorderLayout());
-		Main.setBackground(SystemColor.info);
-		Main.setBorder(null);
+		main.setLayout(new BorderLayout());
+		main.setBackground(SystemColor.info);
+		main.setBorder(null);
 
-		Out.setBackground(Color.lightGray);
-		Out.setHorizontalAlignment(SwingConstants.CENTER);
-		Out.setMaximumSize(new Dimension(100, 19));
-		Out.setMinimumSize(new Dimension(100, 19));
-		Out.setPreferredSize(new Dimension(100, 19));
+		jOut.setBackground(Color.lightGray);
+		jOut.setHorizontalAlignment(SwingConstants.CENTER);
+		jOut.setMaximumSize(new Dimension(100, 19));
+		jOut.setMinimumSize(new Dimension(100, 19));
+		jOut.setPreferredSize(new Dimension(100, 19));
 
 		jLabel1.setForeground(Color.red);
 		jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -188,38 +252,38 @@ class JCalendar extends JPanel {
 		weekPanel.add(jLabel3, null);
 		weekPanel.add(jLabel2, null);
 
-		MonthUp.setAlignmentX((float) 0.0);
-		MonthUp.setActionMap(null);
+		jMonthUp.setAlignmentX((float) 0.0);
+		jMonthUp.setActionMap(null);
 
 		jPanelMonth.setBackground(SystemColor.info);
 		jPanelMonth.setLayout(new BorderLayout());
 		jPanelMonth.setBorder(BorderFactory.createEtchedBorder());
 
-		Month.setBorder(null);
-		Month.setHorizontalAlignment(SwingConstants.CENTER);
-		Month.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				Month_mouseClicked(e);
+		jMonth.setBorder(null);
+		jMonth.setHorizontalAlignment(SwingConstants.CENTER);
+		jMonth.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(final MouseEvent e) {
+				monthMouseClicked(e);
 			}
 		});
-		Month.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				Month_keyPressed(e);
+		jMonth.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				monthKeyPressed(e);
 			}
 		});
 
-		MonthDown.setBorder(null);
-		MonthDown.setText("<-");
-		MonthDown.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MonthDown_actionPerformed(e);
+		jMonthDown.setBorder(null);
+		jMonthDown.setText("<-");
+		jMonthDown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				monthDownActionPerformed(e);
 			}
 		});
-		MonthUp.setBorder(null);
-		MonthUp.setText("->");
-		MonthUp.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MonthUp_actionPerformed(e);
+		jMonthUp.setBorder(null);
+		jMonthUp.setText("->");
+		jMonthUp.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				monthUpActionPerformed(e);
 			}
 		});
 
@@ -228,54 +292,54 @@ class JCalendar extends JPanel {
 		jPanelButton
 				.addComponentListener(new java.awt.event.ComponentAdapter() {
 					public void componentResized(
-							java.awt.event.ComponentEvent evt) {
+							final java.awt.event.ComponentEvent evt) {
 						jPanelButtonComponentResized(evt);
 					}
 				});
 
-		Year.setBorder(BorderFactory.createEtchedBorder());
-		Year.setMaximumSize(new Dimension(80, 25));
-		Year.setMinimumSize(new Dimension(80, 25));
-		Year.setPreferredSize(new Dimension(80, 25));
-		Year.setHorizontalAlignment(SwingConstants.CENTER);
-		Year.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				Year_mouseClicked(e);
+		jYear.setBorder(BorderFactory.createEtchedBorder());
+		jYear.setMaximumSize(new Dimension(80, 25));
+		jYear.setMinimumSize(new Dimension(80, 25));
+		jYear.setPreferredSize(new Dimension(80, 25));
+		jYear.setHorizontalAlignment(SwingConstants.CENTER);
+		jYear.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(final MouseEvent e) {
+				yearMouseClicked(e);
 			}
 		});
-		Year.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				Year_keyPressed(e);
+		jYear.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				yearKeyPressed(e);
 			}
 		});
 
-		YearDown.setBorder(null);
-		YearDown.setMaximumSize(new Dimension(16, 16));
-		YearDown.setMinimumSize(new Dimension(16, 16));
-		YearDown.setPreferredSize(new Dimension(16, 16));
-		YearDown.setSize(new Dimension(16, 16));
-		YearDown.setText("-");
-		YearDown.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				YearDown_actionPerformed(e);
+		jYearDown.setBorder(null);
+		jYearDown.setMaximumSize(new Dimension(16, 16));
+		jYearDown.setMinimumSize(new Dimension(16, 16));
+		jYearDown.setPreferredSize(new Dimension(16, 16));
+		jYearDown.setSize(new Dimension(16, 16));
+		jYearDown.setText("-");
+		jYearDown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				yearDownActionPerformed(e);
 			}
 		});
-		YearUp.setBorder(null);
-		YearUp.setMaximumSize(new Dimension(16, 16));
-		YearUp.setMinimumSize(new Dimension(16, 16));
-		YearUp.setPreferredSize(new Dimension(16, 16));
-		YearUp.setSize(new Dimension(16, 16));
-		YearUp.setText("+");
-		YearUp.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				YearUp_actionPerformed(e);
+		jYearUp.setBorder(null);
+		jYearUp.setMaximumSize(new Dimension(16, 16));
+		jYearUp.setMinimumSize(new Dimension(16, 16));
+		jYearUp.setPreferredSize(new Dimension(16, 16));
+		jYearUp.setSize(new Dimension(16, 16));
+		jYearUp.setText("+");
+		jYearUp.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				yearUpActionPerformed(e);
 			}
 		});
 
 		jPanelDay.setLayout(new BorderLayout());
 
-		Days.setLayout(new GridLayout(6, 7));
-		Days.setBackground(SystemColor.info);
+		jDays.setLayout(new GridLayout(6, 7));
+		jDays.setBackground(SystemColor.info);
 
 		for (int i = 0; i < 42; i++) {
 			days[i] = new JToggleButton();
@@ -285,68 +349,88 @@ class JCalendar extends JPanel {
 			days[i].setHorizontalTextPosition(SwingConstants.CENTER);
 			// days[i].setSize(l,l);
 			days[i].addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(final ActionEvent e) {
 					day = Integer.parseInt(((JToggleButton) e.getSource())
 							.getText());
 					showDate();
 					showDays();
 				}
 			});
-			Days.add(days[i]);
+			jDays.add(days[i]);
 		}
 
-		this.add(Main, BorderLayout.NORTH);
+		this.add(main, BorderLayout.NORTH);
 		this.add(jPanelDay, BorderLayout.CENTER);
 		this.add(jPanelMonth, BorderLayout.SOUTH);
 
-		Main.add(Year, BorderLayout.CENTER);
-		Main.add(Out, BorderLayout.WEST);
-		Main.add(jPanelButton, BorderLayout.EAST);
+		main.add(jYear, BorderLayout.CENTER);
+		main.add(jOut, BorderLayout.WEST);
+		main.add(jPanelButton, BorderLayout.EAST);
 
-		jPanelButton.add(YearUp);
-		jPanelButton.add(YearDown);
+		jPanelButton.add(jYearUp);
+		jPanelButton.add(jYearDown);
 
 		jPanelDay.add(weekPanel, BorderLayout.NORTH);
-		jPanelDay.add(Days, BorderLayout.CENTER);
+		jPanelDay.add(jDays, BorderLayout.CENTER);
 
-		jPanelMonth.add(Month, BorderLayout.CENTER);
-		jPanelMonth.add(MonthDown, BorderLayout.WEST);
-		jPanelMonth.add(MonthUp, BorderLayout.EAST);
+		jPanelMonth.add(jMonth, BorderLayout.CENTER);
+		jPanelMonth.add(jMonthDown, BorderLayout.WEST);
+		jPanelMonth.add(jMonthUp, BorderLayout.EAST);
 
 		showMonth();
 		showYear();
-		showDate();
 		showDays();
+		showDate();
 	}
 
-	// 自定义重画年选择面板
-	void jPanelButtonComponentResized(java.awt.event.ComponentEvent evt) {
-		YearUp.setLocation(0, 0);
-		YearDown.setLocation(0, YearUp.getHeight());
-		jPanelButton.setSize(YearUp.getWidth(), YearUp.getHeight() * 2);
-		jPanelButton.setPreferredSize(new Dimension(YearUp.getWidth(), YearUp
+	/**
+	 * J panel button component resized.
+	 * 自定义重画年选择面板
+	 * 
+	 * @param evt the evt
+	 */
+	void jPanelButtonComponentResized(final java.awt.event.ComponentEvent evt) {
+		jYearUp.setLocation(0, 0);
+		jYearDown.setLocation(0, jYearUp.getHeight());
+		jPanelButton.setSize(jYearUp.getWidth(), jYearUp.getHeight() * 2);
+		jPanelButton.setPreferredSize(new Dimension(jYearUp.getWidth(), jYearUp
 				.getHeight() * 2));
 		jPanelButton.updateUI();
 	}
 
 	// 增加年份
-	void YearUp_actionPerformed(ActionEvent e) {
+	/**
+	 * Year up_action performed.
+	 * 
+	 * @param e the e
+	 */
+	void yearUpActionPerformed(final ActionEvent e) {
 		year++;
 		showYear();
-		showDate();
 		showDays();
+		showDate();
 	}
 
 	// 减少年份
-	void YearDown_actionPerformed(ActionEvent e) {
+	/**
+	 * Year down_action performed.
+	 * 
+	 * @param e the e
+	 */
+	void yearDownActionPerformed(final ActionEvent e) {
 		year--;
 		showYear();
-		showDate();
 		showDays();
+		showDate();
 	}
 
 	// 减少月份
-	void MonthDown_actionPerformed(ActionEvent e) {
+	/**
+	 * Month down_action performed.
+	 * 
+	 * @param e the e
+	 */
+	void monthDownActionPerformed(final ActionEvent e) {
 		month--;
 		if (month < 0) {
 			month = 11;
@@ -354,12 +438,17 @@ class JCalendar extends JPanel {
 			showYear();
 		}
 		showMonth();
-		showDate();
 		showDays();
+		showDate();
 	}
 
 	// 增加月份
-	void MonthUp_actionPerformed(ActionEvent e) {
+	/**
+	 * Month up_action performed.
+	 * 
+	 * @param e the e
+	 */
+	void monthUpActionPerformed(final ActionEvent e) {
 		month++;
 		if (month == 12) {
 			month = 0;
@@ -367,11 +456,14 @@ class JCalendar extends JPanel {
 			showYear();
 		}
 		showMonth();
-		showDate();
 		showDays();
+		showDate();
 	}
 
 	// 初始化年月日
+	/**
+	 * Ini calender.
+	 */
 	void iniCalender() {
 		year = cal.get(Calendar.YEAR);
 		month = cal.get(Calendar.MONTH);
@@ -379,28 +471,46 @@ class JCalendar extends JPanel {
 	}
 
 	// 刷新月份
+	/**
+	 * Show month.
+	 */
 	void showMonth() {
-		Month.setText(Integer.toString(month + 1) + "月");
+		jMonth.setText(Integer.toString(month + 1) + "月");
 	}
 
 	// 刷新年份
+	/**
+	 * Show year.
+	 */
 	void showYear() {
-		Year.setText(Integer.toString(year) + "年");
+		jYear.setText(Integer.toString(year) + "年");
 	}
 
 	// 刷新日期
+	/**
+	 * Show date.
+	 */
 	void showDate() {
-		Out.setText(Integer.toString(year) + "-" + Integer.toString(month + 1)
-				+ "-" + Integer.toString(day));
+		DecimalFormat df = new DecimalFormat("00");
+		jOut.setText(Integer.toString(year) + "-" + df.format(month + 1)
+				+ "-" + df.format(day));
 	}
 
 	// 重画天数选择面板
+	/**
+	 * Show days.
+	 */
 	void showDays() {
 		cal.set(year, month, 1);
 		int firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int n = mm[month];
-		if (cal.isLeapYear(year) && month == 1)
+		if (cal.isLeapYear(year) && month == 1) {
 			n++;
+		}
+		if (day > n) {
+			//day的最大值为n
+			day = n;
+		}
 		int i = 0;
 		for (; i < firstDayOfWeek - 1; i++) {
 			days[i].setEnabled(false);
@@ -411,11 +521,11 @@ class JCalendar extends JPanel {
 		for (; d <= n; d++) {
 			days[i].setText(Integer.toString(d));
 			days[i].setEnabled(true);
-			if (d == day)
+			if (d == day) {
 				days[i].setSelected(true);
-			else
+			} else {
 				days[i].setSelected(false);
-			;
+			}
 			i++;
 		}
 		for (; i < 42; i++) {
@@ -426,105 +536,173 @@ class JCalendar extends JPanel {
 	}
 
 	// 单击年份面板选择整个年份字符串
-	void SelectionYear() {
-		Year.setSelectionStart(0);
-		Year.setSelectionEnd(Year.getText().length());
+	/**
+	 * Selection year.
+	 */
+	void selectionYear() {
+		jYear.setSelectionStart(0);
+		jYear.setSelectionEnd(jYear.getText().length());
 	}
 
 	// 单击月份面板选择整个月份字符串
-	void SelectionMonth() {
-		Month.setSelectionStart(0);
-		Month.setSelectionEnd(Month.getText().length());
+	/**
+	 * Selection month.
+	 */
+	void selectionMonth() {
+		jMonth.setSelectionStart(0);
+		jMonth.setSelectionEnd(jMonth.getText().length());
 	}
 
 	// 月份面板响应鼠标单击事件
-	void Month_mouseClicked(MouseEvent e) {
+	/**
+	 * Month_mouse clicked.
+	 * 
+	 * @param e the e
+	 */
+	void monthMouseClicked(final MouseEvent e) {
 		// SelectionMonth();
 		inputMonth();
 	}
 
 	// 检验输入的月份
+	/**
+	 * Input month.
+	 */
 	void inputMonth() {
 		String s;
-		if (Month.getText().endsWith("月")) {
-			s = Month.getText().substring(0, Month.getText().length() - 1);
-		} else
-			s = Month.getText();
+		if (jMonth.getText().endsWith("月")) {
+			s = jMonth.getText().substring(0, jMonth.getText().length() - 1);
+		} else {
+			s = jMonth.getText();
+		}
 		month = Integer.parseInt(s) - 1;
 		this.showMe();
 	}
 
 	// 月份面板键盘敲击事件响应
-	void Month_keyPressed(KeyEvent e) {
-		if (e.getKeyChar() == 10)
+	/**
+	 * Month_key pressed.
+	 * 
+	 * @param e the e
+	 */
+	void monthKeyPressed(final KeyEvent e) {
+		if (e.getKeyChar() == 10) {
 			inputMonth();
+		}
 	}
 
 	// 年份面板响应鼠标单击事件
-	void Year_mouseClicked(MouseEvent e) {
+	/**
+	 * Year_mouse clicked.
+	 * 
+	 * @param e the e
+	 */
+	void yearMouseClicked(final MouseEvent e) {
 		// SelectionYear();
 		inputYear();
 	}
 
 	// 年份键盘敲击事件响应
-	void Year_keyPressed(KeyEvent e) {
+	/**
+	 * Year_key pressed.
+	 * 
+	 * @param e the e
+	 */
+	void yearKeyPressed(KeyEvent e) {
 		// System.out.print(new Integer(e.getKeyChar()).byteValue());
-		if (e.getKeyChar() == 10)
+		if (e.getKeyChar() == 10) {
 			inputYear();
+		}
 	}
 
 	// 检验输入的年份字符串
+	/**
+	 * Input year.
+	 */
 	void inputYear() {
 		String s;
-		if (Year.getText().endsWith("年")) {
-			s = Year.getText().substring(0, Year.getText().length() - 1);
-		} else
-			s = Year.getText();
+		if (jYear.getText().endsWith("年")) {
+			s = jYear.getText().substring(0, jYear.getText().length() - 1);
+		} else {
+			s = jYear.getText();
+		}
 		try {
 			year = Integer.parseInt(s);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		this.showMe();
 	}
 
-	// 以字符串形式返回日期,yyyy-mm-dd
+	/**
+	 * Gets the date, yyyy-mm-dd.
+	 * 
+	 * @return the date
+	 */
 	public String getDate() {
-		return Out.getText();
+		return jOut.getText();
 	}
 
-	// 以字符串形式输入日期,yyyy-mm-dd
-	public void setDate(String date) {
+	/**
+	 * Sets the date, yyyy-mm-dd.
+	 * 
+	 * @param date the new date
+	 */
+	public void setDate(final String date) {
 		if (date != null) {
 			StringTokenizer f = new StringTokenizer(date, "-");
-			if (f.hasMoreTokens())
+			if (f.hasMoreTokens()) {
 				year = Integer.parseInt(f.nextToken());
-			if (f.hasMoreTokens())
+			}
+			if (f.hasMoreTokens()) {
 				month = Integer.parseInt(f.nextToken());
-			if (f.hasMoreTokens())
+			}
+			if (f.hasMoreTokens()) {
 				day = Integer.parseInt(f.nextToken());
+			}
 			cal.set(year, month, day);
 		}
 		this.showMe();
 	}
 
 	// 以日期对象形式输入日期
-	public void setTime(Date date) {
+	/**
+	 * Sets the time.
+	 * 
+	 * @param date the new time
+	 */
+	public void setTime(final Date date) {
 		cal.setTime(date);
 		this.iniCalender();
 		this.showMe();
 	}
 
 	// 返回日期对象
+	/**
+	 * Gets the time.
+	 * 
+	 * @return the time
+	 */
 	public Date getTime() {
 		return cal.getTime();
 	}
 
 	// 返回当前的日
+	/**
+	 * Gets the day.
+	 * 
+	 * @return the day
+	 */
 	public int getDay() {
 		return day;
 	}
 
 	// 设置当前的日
+	/**
+	 * Sets the day.
+	 * 
+	 * @param day the new day
+	 */
 	public void setDay(int day) {
 		this.day = day;
 		cal.set(this.year, this.month, this.day);
@@ -532,6 +710,11 @@ class JCalendar extends JPanel {
 	}
 
 	// 设置当前的年
+	/**
+	 * Sets the year.
+	 * 
+	 * @param year the new year
+	 */
 	public void setYear(int year) {
 		this.year = year;
 		cal.set(this.year, this.month, this.day);
@@ -539,16 +722,31 @@ class JCalendar extends JPanel {
 	}
 
 	// 返回当前的年
+	/**
+	 * Gets the year.
+	 * 
+	 * @return the year
+	 */
 	public int getYear() {
 		return year;
 	}
 
 	// 返回当前的月
+	/**
+	 * Gets the month.
+	 * 
+	 * @return the month
+	 */
 	public int getMonth() {
 		return month;
 	}
 
 	// 设置当前的月
+	/**
+	 * Sets the month.
+	 * 
+	 * @param month the new month
+	 */
 	public void setMonth(int month) {
 		this.month = month;
 		cal.set(this.year, this.month, this.day);
@@ -556,6 +754,9 @@ class JCalendar extends JPanel {
 	}
 
 	// 刷新
+	/**
+	 * Show me.
+	 */
 	public void showMe() {
 		this.showDays();
 		this.showMonth();
@@ -564,7 +765,12 @@ class JCalendar extends JPanel {
 	}
 	
 	// 测试用
-	public static void main(String[] args) {
+	/**
+	 * The main method.
+	 * 
+	 * @param args the arguments
+	 */
+	public static void main(final String[] args) {
 		JFrame f = new JFrame();
 		f.setContentPane(new JCalendar());
 		f.pack();
