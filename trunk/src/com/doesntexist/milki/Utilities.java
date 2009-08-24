@@ -1,12 +1,30 @@
+/**
+ * @author milki
+ */
 package com.doesntexist.milki;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Utilities {
-	public static void log(String words) {
-		Calendar now=Calendar.getInstance();
-		String time=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
-		+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+ now.get(Calendar.SECOND);
+/**
+ * The Class Utilities.
+ */
+public final class Utilities {
+	
+	/**
+	 * No instantiating a new utilities.
+	 */
+	private Utilities() {
+	}
+	
+	/**
+	 * Log.
+	 * @param words the message
+	 */
+	public static void log(final String words) {
+		Date current = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = format.format(current);
 		System.out.println("[" + time + "] " +  words);
 	}
 }

@@ -1,3 +1,6 @@
+/**
+ * @author milki
+ */
 package com.doesntexist.milki;
 
 import java.io.BufferedReader;
@@ -7,21 +10,35 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.rmi.CORBA.Util;
-
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExchangeRate.
+ */
 public class ExchangeRate implements Runnable {
-	private static int delay;
-	private static String date = new String();
-	private static String rate = new String();
 	
-	private String amountStr = new String("100");
-	private String fromStr = new String("CAD");
-	private String toStr = new String("CNY");
+	/** The delay. */
+	private static int delay;
+	
+	/** The date. */
+	private static String date = new String();
+	
+	/** The rate. */
+	private static String rate = new String("(Loading...)");
+	
+	/** The amount str. */
+	private static String amountStr = new String("100");
+	
+	/** The from str. */
+	private static String fromStr = new String("CAD");
+	
+	/** The to str. */
+	private static String toStr = new String("CNY");
 	
 //	public String getContent(String strUrl) {
 //		try {
 //			URL url = new URL(strUrl);
-//			BufferedReader buf = new BufferedReader(new InputStreamReader(url.openStream()));
+//			BufferedReader buf = new BufferedReader(
+//					new InputStreamReader(url.openStream()));
 //			String t = "";
 //			StringBuffer sb = new StringBuffer("");
 //			while ((t = buf.readLine()) != null) {
@@ -51,14 +68,21 @@ public class ExchangeRate implements Runnable {
 //		}
 //	}
 
-	public String getContent() {
+	/**
+	 * Gets the content.
+	 * 
+	 * @return the content
+	 */
+	public final String getContent() {
 		try {
 			URL url = new URL("http://www.xe.com/ucc/convert.cgi");
 			System.setProperty("http.agent", "Mozilla/4.0");
 			URLConnection connection = url.openConnection();
 			connection.setDoOutput(true);
-			OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "8859_1");
-			out.write("Amount=" + amountStr +"&From=" + fromStr + "&To=" + toStr + "&image.x=16&image.y=11&image=Submit");
+			OutputStreamWriter out = new OutputStreamWriter(
+					connection.getOutputStream());
+			out.write("Amount=" + amountStr + "&From=" + fromStr + "&To=" 
+					+ toStr	+ "&image.x=16&image.y=11&image=Submit");
 			out.flush();
 			out.close();
 			
@@ -66,21 +90,22 @@ public class ExchangeRate implements Runnable {
 			String sTotalString;
 			sCurrentLine = "";
 			sTotalString = "";
-			InputStream l_urlStream;
-			l_urlStream = connection.getInputStream();
-			BufferedReader l_reader = new BufferedReader(new InputStreamReader(l_urlStream));
-			while ((sCurrentLine = l_reader.readLine()) != null) {
+			InputStream lurlStream;
+			lurlStream = connection.getInputStream();
+			BufferedReader lReader = new BufferedReader(
+					new InputStreamReader(lurlStream));
+			while ((sCurrentLine = lReader.readLine()) != null) {
 				if (sCurrentLine.contains("Live rates at")) {
 					date = sCurrentLine.substring(
-												sCurrentLine.indexOf("XEsmall") + 23,
-												sCurrentLine.lastIndexOf("</span>"));
-					l_reader.readLine();
-					l_reader.readLine();
-					l_reader.readLine();
-					sCurrentLine = l_reader.readLine();
+									sCurrentLine.indexOf("XEsmall") + 23,
+									sCurrentLine.lastIndexOf("</span>"));
+					lReader.readLine();
+					lReader.readLine();
+					lReader.readLine();
+					sCurrentLine = lReader.readLine();
 					rate = sCurrentLine.substring(
-												sCurrentLine.indexOf("\"XE\">") + 5, 
-												sCurrentLine.lastIndexOf(toStr + "<!--"));
+									sCurrentLine.indexOf("\"XE\">") + 5, 
+									sCurrentLine.lastIndexOf(toStr + "<!--"));
 					sTotalString = date + " " + rate;
 					break;
 				}
@@ -94,25 +119,57 @@ public class ExchangeRate implements Runnable {
 		}
 	}
 	
-	public String getDate() {
+	/**
+	 * Gets the date.
+	 * 
+	 * @return the date
+	 */
+	public static String getDate() {
 		return date;
 	}
 
-	public String getRate() {
+	/**
+	 * Gets the rate.
+	 * 
+	 * @return the rate
+	 */
+	public static String getRate() {
 		return rate;
 	}
 
-	public ExchangeRate(int delay) {
+	/**
+	 * Gets the long string.
+	 * 
+	 * @return the long string
+	 */
+	public static String getLongString() {
+		return amountStr + " " + fromStr + " = " + getRate() + toStr;
+	}
+	
+	/**
+	 * Instantiates a new exchange rate.
+	 * 
+	 * @param delay the delay
+	 */
+	public ExchangeRate(final int delay) {
 		ExchangeRate.delay = delay;
 	}
 	
-	public static void main(String[] Args) {
+	/**
+	 * The main method.
+	 * 
+	 * @param Args the arguments
+	 */
+	public static void main(final String[] args) {
 		ExchangeRate er = new ExchangeRate(3000);
 		Thread thread1 = new Thread(er);
 		thread1.start();
 	}
 
-	public void run() {
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public final void run() {
 		while (true) {
 			try {
 				Utilities.log(getContent());
