@@ -8,18 +8,35 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.swing.AbstractAction;
+import javax.swing.FocusManager;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -27,11 +44,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ThriftGUI.
  */
 public class ThriftGUI extends JFrame {
+	private static JFrame jFrame;
 	
 	/** The title. */
 	private static String title = new String("Thrift - 俭，德之共也；侈，恶之大也");
@@ -41,7 +58,10 @@ public class ThriftGUI extends JFrame {
 	
 	/** The Constant height. */
 	private static final int HEIGHT = 700;
+	/* JFrames / JDialogs below */
+	private JDialog preferencePane;
 	
+	/* JPanels below */
 	/** The date selector. */
 	private JPanel dateSelector = new JPanel();
 	
@@ -53,6 +73,16 @@ public class ThriftGUI extends JFrame {
 	
 	/** The status bar. */
 	private JPanel statusBar = new JPanel();
+	
+	/* JMenus below */
+	/** The menu bar. */
+	private JMenuBar menuBar = new JMenuBar();
+	
+	/** The edit menu. */
+	private JMenu editMenu = new JMenu("Edit", true);
+	
+	/** The preferences item. */
+	private JMenuItem preferencesItem = new JMenuItem("Preferences...");
 	
 	/** The s exchange rate display. */
 	private JLabel sExchangeRateDisplay = new JLabel() {
@@ -69,10 +99,8 @@ public class ThriftGUI extends JFrame {
 	 * The Class ExchangeRateRefresher.
 	 */
 	class ExchangeRateRefresher extends Thread {
-		
 		/** The display label. */
 		private JLabel displayLabel;
-		
 		/**
 		 * Instantiates a new exchange rate refresher.
 		 * 
@@ -81,10 +109,8 @@ public class ThriftGUI extends JFrame {
 		public ExchangeRateRefresher(final JLabel displayLabel) {
 			this.displayLabel = displayLabel;
 		}
-		
 		/**
 		 * Run.
-		 * 
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
@@ -96,7 +122,7 @@ public class ThriftGUI extends JFrame {
 							+ engine.getExchangeRateLongString() 
 							+ 	" <a href=\"http://www.xe.com\">XE.com" 
 							+ "</a></html>");
-				Thread.sleep(1000);
+				Thread.sleep(100);
 				} catch (Exception e) {
 					Utilities.log("Error refresh exchange rate.");
 				}
@@ -109,7 +135,7 @@ public class ThriftGUI extends JFrame {
 	private static Engine engine;
 	
 	/**
-	 * Instantiates a new thrift gui.
+	 * Instantiates a new thrift GUI.
 	 */
 	public ThriftGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,11 +144,13 @@ public class ThriftGUI extends JFrame {
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		
+		engine = new Engine();
 		exchangeRateRefresher.start();
 		
 		setPanels();
 		setMenus();
 		
+		dateSelector.requestFocus();
 		setVisible(true);
 	}
 
@@ -155,14 +183,32 @@ public class ThriftGUI extends JFrame {
 	 * Sets the menus.
 	 */
 	private void setMenus() {
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, InputEvent.META_DOWN_MASK), "preferences");
+		getRootPane().getActionMap().put("preferences", new AbstractAction() { 
+				public void actionPerformed(final ActionEvent e) {
+					Utilities.log("Lauch preferences pane by keyboard.");
+					preferencePane = new PreferencesDialog(jFrame);
+				} 
+		});
+		preferencesItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				Utilities.log("Lauch preferences pane from menu.");
+				preferencePane = new PreferencesDialog(jFrame);
+			}
+		});
+		editMenu.add(preferencesItem);
+		
+		menuBar.add(editMenu);
+		setJMenuBar(menuBar);
 	}
 	
 	/**
-	 * Creates the and show gui.
+	 * Creates and show GUI.
 	 */
 	public static void createAndShowGUI() {
-		engine = new Engine();
-		new ThriftGUI();
+		jFrame = new ThriftGUI();
 	}
 	
 	/**
