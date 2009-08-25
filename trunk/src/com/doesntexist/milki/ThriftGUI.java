@@ -48,6 +48,7 @@ import javax.swing.event.HyperlinkListener;
  * The Class ThriftGUI.
  */
 public class ThriftGUI extends JFrame {
+	/** The main frame. */
 	private static JFrame jFrame;
 	
 	/** The title. */
@@ -58,21 +59,26 @@ public class ThriftGUI extends JFrame {
 	
 	/** The Constant height. */
 	private static final int HEIGHT = 700;
+	
 	/* JFrames / JDialogs below */
+	/** The preference pane. */
 	private JDialog preferencePane;
 	
 	/* JPanels below */
 	/** The date selector. */
 	private JPanel dateSelector = new JPanel();
 	
-	/** The pie chart. */
-	private JPanel pieChart = new JPanel();
+	/** The pie chart panel. */
+	private JPanel pieChartPanel = new JPanel();
 	
 	/** The entry list. */
 	private JPanel entryList = new JPanel();
 	
 	/** The status bar. */
 	private JPanel statusBar = new JPanel();
+	
+	/** The pie chart option panel. */
+	private JPanel pieChartOption = new JPanel();
 	
 	/* JMenus below */
 	/** The menu bar. */
@@ -141,7 +147,6 @@ public class ThriftGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(title);
 		setSize(new Dimension(WIDTH, HEIGHT));
-		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		
 		engine = new Engine();
@@ -150,7 +155,8 @@ public class ThriftGUI extends JFrame {
 		setPanels();
 		setMenus();
 		
-		dateSelector.requestFocus();
+		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
@@ -158,6 +164,9 @@ public class ThriftGUI extends JFrame {
 	 * Sets the panels.
 	 */
 	private void setPanels() {
+		JPanel northPanel = new JPanel(new BorderLayout());
+		JPanel northWestPanel = new JPanel(new BorderLayout());
+		
 		dateSelector.add(engine.getCalendar());
 		
 		sExchangeRateDisplay.setText(engine.getExchangeRateLongString());
@@ -175,7 +184,17 @@ public class ThriftGUI extends JFrame {
 		});
 		statusBar.add(sExchangeRateDisplay);
 		
-		add(dateSelector, BorderLayout.WEST);
+		pieChartPanel = engine.getPieChart().getPieChartPanel();
+		pieChartPanel.setPreferredSize(new Dimension(480, 300));
+
+		
+		
+		northWestPanel.add(dateSelector, BorderLayout.NORTH);
+		northWestPanel.add(pieChartOption, BorderLayout.CENTER);
+		northPanel.add(pieChartPanel, BorderLayout.CENTER);
+		northPanel.add(northWestPanel, BorderLayout.WEST);
+		
+		add(northPanel, BorderLayout.NORTH);
 		add(statusBar, BorderLayout.SOUTH);
 	}
 	
@@ -183,8 +202,11 @@ public class ThriftGUI extends JFrame {
 	 * Sets the menus.
 	 */
 	private void setMenus() {
+		/* Edit */
+		/* - Preferences... */
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, InputEvent.META_DOWN_MASK), "preferences");
+				KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 
+						InputEvent.META_DOWN_MASK), "preferences");
 		getRootPane().getActionMap().put("preferences", new AbstractAction() { 
 				public void actionPerformed(final ActionEvent e) {
 					Utilities.log("Lauch preferences pane by keyboard.");
@@ -200,6 +222,7 @@ public class ThriftGUI extends JFrame {
 		});
 		editMenu.add(preferencesItem);
 		
+		
 		menuBar.add(editMenu);
 		setJMenuBar(menuBar);
 	}
@@ -213,7 +236,6 @@ public class ThriftGUI extends JFrame {
 	
 	/**
 	 * The main method.
-	 * 
 	 * @param args the arguments
 	 */
 	public static void main(final String[] args) {

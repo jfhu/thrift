@@ -197,7 +197,7 @@ class JCalendar extends JPanel {
 		iniCalender();
 
 		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		this.setMaximumSize(new Dimension(200, 200));
 		this.setMinimumSize(new Dimension(200, 200));
 		this.setPreferredSize(new Dimension(200, 200));
