@@ -23,7 +23,7 @@ public final class Utilities {
 	 */
 	public static void log(final String words) {
 		Date current = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		String time = format.format(current);
 		System.out.println("[" + time + "] " +  words);
 	}

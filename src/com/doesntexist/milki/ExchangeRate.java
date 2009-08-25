@@ -9,8 +9,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExchangeRate.
  */
@@ -19,19 +24,22 @@ public class ExchangeRate implements Runnable {
 	/** The delay. */
 	private static int delay;
 	
+	/** The rate string. */
+	private static String rateStr = new String("(Loading...)");
+	
+	/** The date string. */
+	private static String dateStr = new String("0000.00.00 00:00:00");
+	
 	/** The date. */
-	private static String date = new String();
+	private static Date date = Calendar.getInstance().getTime();
 	
-	/** The rate. */
-	private static String rate = new String("(Loading...)");
-	
-	/** The amount str. */
+	/** The amount string. */
 	private static String amountStr = new String("100");
 	
-	/** The from str. */
+	/** The from string. */
 	private static String fromStr = new String("CAD");
 	
-	/** The to str. */
+	/** The to string. */
 	private static String toStr = new String("CNY");
 	
 //	public String getContent(String strUrl) {
@@ -70,7 +78,6 @@ public class ExchangeRate implements Runnable {
 
 	/**
 	 * Gets the content.
-	 * 
 	 * @return the content
 	 */
 	public final String getContent() {
@@ -96,50 +103,68 @@ public class ExchangeRate implements Runnable {
 					new InputStreamReader(lurlStream));
 			while ((sCurrentLine = lReader.readLine()) != null) {
 				if (sCurrentLine.contains("Live rates at")) {
-					date = sCurrentLine.substring(
+					dateStr = sCurrentLine.substring(
 									sCurrentLine.indexOf("XEsmall") + 23,
-									sCurrentLine.lastIndexOf("</span>"));
+									sCurrentLine.lastIndexOf(" UTC</span>"));
 					lReader.readLine();
 					lReader.readLine();
 					lReader.readLine();
 					sCurrentLine = lReader.readLine();
-					rate = sCurrentLine.substring(
-									sCurrentLine.indexOf("\"XE\">") + 5, 
+					rateStr = sCurrentLine.substring(
+									sCurrentLine.indexOf("\"XE\">") + 5,
 									sCurrentLine.lastIndexOf(toStr + "<!--"));
-					sTotalString = date + " " + rate;
+					sTotalString = dateStr + " " + rateStr;
 					break;
 				}
 			}
+			
+			/* date string -> Date in local time zone */
+			SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			Calendar calUTC;
+			TimeZone oldTimeZone = cal.getTimeZone();
+			try {
+				cal.setTime(df.parse(dateStr));
+				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+				calUTC = (Calendar) cal.clone();
+				cal.setTimeZone(oldTimeZone);
+				calUTC.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+						cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
+						cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+				calUTC.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
+				cal.getTime();
+				date = calUTC.getTime();
+			} catch (ParseException e) {
+				Utilities.log("Error parsing date.");
+			} 
+			
+			/* return for printing */
 			return sTotalString;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			date = new String("0000.00.00 00:00:00 UTC");
-			rate = new String("0");
+			dateStr = new String("(unknown date)");
+			rateStr = new String("(unknown rate)");
 			return "Error: connection failed.";
 		}
 	}
-	
 	/**
 	 * Gets the date.
-	 * 
 	 * @return the date
 	 */
-	public static String getDate() {
+	public static Date getDate() {
 		return date;
 	}
 
 	/**
 	 * Gets the rate.
-	 * 
 	 * @return the rate
 	 */
 	public static String getRate() {
-		return rate;
+		return rateStr;
 	}
 
 	/**
 	 * Gets the long string.
-	 * 
 	 * @return the long string
 	 */
 	public static String getLongString() {
@@ -148,7 +173,6 @@ public class ExchangeRate implements Runnable {
 	
 	/**
 	 * Instantiates a new exchange rate.
-	 * 
 	 * @param delay the delay
 	 */
 	public ExchangeRate(final int delay) {
@@ -157,8 +181,7 @@ public class ExchangeRate implements Runnable {
 	
 	/**
 	 * The main method.
-	 * 
-	 * @param Args the arguments
+	 * @param args the arguments
 	 */
 	public static void main(final String[] args) {
 		ExchangeRate er = new ExchangeRate(3000);
@@ -172,7 +195,8 @@ public class ExchangeRate implements Runnable {
 	public final void run() {
 		while (true) {
 			try {
-				Utilities.log(getContent());
+				getContent();
+				Utilities.log(getDate() + " " + getLongString());
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

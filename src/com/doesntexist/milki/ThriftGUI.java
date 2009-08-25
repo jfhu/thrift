@@ -27,6 +27,7 @@ import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.FocusManager;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -78,7 +79,7 @@ public class ThriftGUI extends JFrame {
 	private JPanel statusBar = new JPanel();
 	
 	/** The pie chart option panel. */
-	private JPanel pieChartOption = new JPanel();
+	private JPanel pieChartOptionPanel = new JPanel();
 	
 	/* JMenus below */
 	/** The menu bar. */
@@ -171,7 +172,7 @@ public class ThriftGUI extends JFrame {
 		
 		sExchangeRateDisplay.setText(engine.getExchangeRateLongString());
 		ToolTipManager.sharedInstance().setInitialDelay(0);
-		ToolTipManager.sharedInstance().setDismissDelay(1000);
+		ToolTipManager.sharedInstance().setDismissDelay(2000);
 		sExchangeRateDisplay.setToolTipText("Loading...");
 		sExchangeRateDisplay.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(final MouseEvent e) {
@@ -185,12 +186,17 @@ public class ThriftGUI extends JFrame {
 		statusBar.add(sExchangeRateDisplay);
 		
 		pieChartPanel = engine.getPieChart().getPieChartPanel();
-		pieChartPanel.setPreferredSize(new Dimension(480, 300));
+		pieChartPanel.setPreferredSize(new Dimension(500, 300));
 
-		
+		pieChartOptionPanel.setLayout(new FlowLayout());
+		pieChartOptionPanel.add(new JLabel("Pie Chart:"));
+		JComboBox pieChartOptionComboBox = new JComboBox();
+		pieChartOptionComboBox.addItem("By Category");
+		pieChartOptionComboBox.addItem("By Account");
+		pieChartOptionPanel.add(pieChartOptionComboBox);
 		
 		northWestPanel.add(dateSelector, BorderLayout.NORTH);
-		northWestPanel.add(pieChartOption, BorderLayout.CENTER);
+		northWestPanel.add(pieChartOptionPanel, BorderLayout.SOUTH);
 		northPanel.add(pieChartPanel, BorderLayout.CENTER);
 		northPanel.add(northWestPanel, BorderLayout.WEST);
 		
