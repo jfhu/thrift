@@ -16,7 +16,7 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.RectangleEdge;
 
-import com.doesntexist.milki.abstractData.Entry;
+import com.doesntexist.milki.abstractModel.Entry;
 
 public class PieChart {
 	JPanel panel;
