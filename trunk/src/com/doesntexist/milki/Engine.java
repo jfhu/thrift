@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.doesntexist.milki.abstractData.Account;
-import com.doesntexist.milki.abstractData.Entry;
+import com.doesntexist.milki.abstractModel.Account;
+import com.doesntexist.milki.abstractModel.Entry;
 
 /**
  * The Class Engine.

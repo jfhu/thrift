@@ -1,4 +1,4 @@
-package com.doesntexist.milki.abstractData;
+package com.doesntexist.milki.abstractModel;
 
 import java.io.Serializable;
 

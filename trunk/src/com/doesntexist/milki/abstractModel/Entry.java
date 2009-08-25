@@ -1,15 +1,15 @@
 /**
  * @author milki
  */
-package com.doesntexist.milki.abstractData;
+package com.doesntexist.milki.abstractModel;
 
+import java.io.Serializable;
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Entry.
  */
-public class Entry implements Comparable<Entry> {
+public class Entry implements Comparable<Entry>, Serializable{
 	
 	/** The valid. */
 	private boolean valid;
@@ -34,7 +34,6 @@ public class Entry implements Comparable<Entry> {
 	
 	/**
 	 * Checks if is valid.
-	 * 
 	 * @return true, if is valid
 	 */
 	public final boolean isValid() {
@@ -43,7 +42,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Sets the valid.
-	 * 
 	 * @param valid the new valid
 	 */
 	public final void setValid(final boolean valid) {
@@ -52,7 +50,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the account id.
-	 * 
 	 * @return the account id
 	 */
 	public final String getAccountId() {
@@ -61,7 +58,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the category id.
-	 * 
 	 * @return the category id
 	 */
 	public final String getCategoryId() {
@@ -70,7 +66,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the amount.
-	 * 
 	 * @return the amount
 	 */
 	public final int getAmount() {
@@ -79,7 +74,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the currency id.
-	 * 
 	 * @return the currency id
 	 */
 	public final String getCurrencyId() {
@@ -88,7 +82,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the remark.
-	 * 
 	 * @return the remark
 	 */
 	public final String getRemark() {
@@ -97,7 +90,6 @@ public class Entry implements Comparable<Entry> {
 
 	/**
 	 * Gets the date.
-	 * 
 	 * @return the date
 	 */
 	public final Date getDate() {
