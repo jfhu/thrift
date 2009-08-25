@@ -16,7 +16,6 @@ import java.util.Collections;
  * The Class Engine.
  */
 public class Engine {
-	
 	/** The file name data. */
 	private File fileNameData = new File("entryData.data");
 	
@@ -39,11 +38,15 @@ public class Engine {
 	/** The calendar. */
 	private JCalendar calendar;
 	
+	/** The pie chart. */
+	private PieChart pieChart;
+	
 	/**
 	 * Instantiates a new engine.
 	 */
 	public Engine() {
 		calendar = new JCalendar();
+		pieChart = new PieChart();
 		 
 		try {
 			loadPreferences();
@@ -136,10 +139,9 @@ public class Engine {
 		}
 	}
 	
-	//getters
+	/* getters */
 	/**
 	 * Gets the calendar.
-	 * 
 	 * @return the calendar
 	 */
 	public final JCalendar getCalendar() {
@@ -147,8 +149,15 @@ public class Engine {
 	}
 	
 	/**
+	 * Gets the pie chart.
+	 * @return the pie chart
+	 */
+	public final PieChart getPieChart() {
+		return pieChart;
+	}
+	
+	/**
 	 * Gets the exchange rate.
-	 * 
 	 * @return the exchange rate
 	 */
 	public final String getExchangeRate() {
@@ -157,7 +166,6 @@ public class Engine {
 	
 	/**
 	 * Gets the exchange date.
-	 * 
 	 * @return the exchange date
 	 */
 	public final String getExchangeDate() {
@@ -166,7 +174,6 @@ public class Engine {
 	
 	/**
 	 * Gets the exchange rate long string.
-	 * 
 	 * @return the exchange rate long string
 	 */
 	public final String getExchangeRateLongString() {
