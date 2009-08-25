@@ -9,7 +9,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 
-public class PieChartPanel {
+public class PieChart {
 	
 	private DefaultPieDataset getDataset() {
 		String[] section = new String[] { "Jan","Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec" };
@@ -39,7 +39,7 @@ public class PieChartPanel {
 	
 	public static void main(String[] args) {   
 		JFrame demo = new JFrame();
-		demo.setContentPane(new PieChartPanel().createDemoPanel());
+		demo.setContentPane(new PieChart().createDemoPanel());
 		demo.pack();
 		demo.setVisible(true);   
 	}   
