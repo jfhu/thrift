@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
@@ -137,7 +139,6 @@ class JCalendar extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -377,10 +378,7 @@ class JCalendar extends JPanel {
 		jPanelMonth.add(jMonthDown, BorderLayout.WEST);
 		jPanelMonth.add(jMonthUp, BorderLayout.EAST);
 
-		showMonth();
-		showYear();
-		showDays();
-		showDate();
+		showMe();
 	}
 
 	/**
@@ -406,9 +404,7 @@ class JCalendar extends JPanel {
 	 */
 	void yearUpActionPerformed(final ActionEvent e) {
 		year++;
-		showYear();
-		showDays();
-		showDate();
+		showMe();
 	}
 
 	// 减少年份
@@ -419,9 +415,7 @@ class JCalendar extends JPanel {
 	 */
 	void yearDownActionPerformed(final ActionEvent e) {
 		year--;
-		showYear();
-		showDays();
-		showDate();
+		showMe();
 	}
 
 	// 减少月份
@@ -437,9 +431,7 @@ class JCalendar extends JPanel {
 			year--;
 			showYear();
 		}
-		showMonth();
-		showDays();
-		showDate();
+		showMe();
 	}
 
 	// 增加月份
@@ -455,9 +447,7 @@ class JCalendar extends JPanel {
 			year++;
 			showYear();
 		}
-		showMonth();
-		showDays();
-		showDate();
+		showMe();
 	}
 
 	// 初始化年月日

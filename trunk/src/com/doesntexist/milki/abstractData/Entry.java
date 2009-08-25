@@ -1,7 +1,7 @@
 /**
  * @author milki
  */
-package com.doesntexist.milki;
+package com.doesntexist.milki.abstractData;
 
 import java.util.Date;
 

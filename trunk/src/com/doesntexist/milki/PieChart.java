@@ -16,6 +16,8 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.RectangleEdge;
 
+import com.doesntexist.milki.abstractData.Entry;
+
 public class PieChart {
 	JPanel panel;
 	ArrayList<Entry> data;
@@ -28,7 +30,7 @@ public class PieChart {
 		this.data = data;
 	}
 	
-	private DefaultPieDataset generateDataset() {
+	private DefaultPieDataset generateRandomDataset() {
 		String[] section = new String[] { "图书","食物","水果","交通","其它"};
 		double[] data = new double[section.length];   
 		for (int i = 0; i < data.length; i++) {
@@ -48,8 +50,8 @@ public class PieChart {
 		return chart;   
 	}   
 
-	public  JPanel getPieChartPanel() {   
-		JFreeChart chart = createChart(generateDataset());
+	public  JPanel getPieChartPanel() {
+		JFreeChart chart = createChart(generateRandomDataset());
 		chart.setBackgroundPaint(null);
 		chart.getLegend().setPosition(RectangleEdge.RIGHT);
 		

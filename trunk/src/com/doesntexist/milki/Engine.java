@@ -9,25 +9,36 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import com.doesntexist.milki.abstractData.Account;
+import com.doesntexist.milki.abstractData.Entry;
 
 /**
  * The Class Engine.
  */
 public class Engine {
+	/* System settings */
 	/** The file name data. */
 	private File fileNameData = new File("entryData.data");
 	
 	/** The file name preference. */
 	private File fileNamePreference = new File("config.pref");
 	
+	/* System Preferences */
 	/** The option get exchange rate delay. */
 	private int optionGetExchangeRateDelay = 30000;
 	
-	/** The data. */
+	/* Data */
+	/** The data entries. */
 	private ArrayList<Entry> data = new ArrayList<Entry>();
+	/** The Account list. */
+	private ArrayList<Account> accountList = new ArrayList<Account>();
 	
+	/* Functionality */
 	/** The exchange rate. */
 	private ExchangeRate exchangeRate = 
 		new ExchangeRate(optionGetExchangeRateDelay);
@@ -62,7 +73,6 @@ public class Engine {
 	
 	/**
 	 * Load preferences.
-	 * 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ClassNotFoundException the class not found exception
 	 */
@@ -169,7 +179,7 @@ public class Engine {
 	 * @return the exchange date
 	 */
 	public final String getExchangeDate() {
-		return ExchangeRate.getDate();
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ExchangeRate.getDate());
 	}
 	
 	/**
