@@ -161,6 +161,8 @@ public class EntryTableModel extends AbstractTableModel
 				return false;
 			 }
 		};
+//	TODO	TO FIX BUG
+		table.clearSelection();
 		sorter.setRowFilter(rf);
 	}
 	

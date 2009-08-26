@@ -261,29 +261,38 @@ public class Engine {
 	}
 
 	public Entry checkFilterTextMatch(String filterText) {
-		int countMatch = 0;
+		int countMatch1 = 0;
 		String matchString = "";
 		Entry o = new Entry(false, "", "", 0, "", "", new Date());
+		if (filterText.equals("")) {
+			return o;
+		}
 		for (Account ac : accountList) {
 			if (ac.getId().contains(filterText)) {
-				countMatch++;
-				matchString = ac.getId(); 
+				countMatch1++;
+				matchString = ac.getId();
+				Utilities.log("Account " + ac.getId() + " matches the string " + filterText + ".");
 			}
 		}
-		if (countMatch == 1) {
+		if (countMatch1 == 1) {
 			o.setAccountId(matchString);
 		}
 		
-		countMatch = 0;
+		int countMatch2 = 0;
 		matchString = "";
 		for (Category ca : categoryList) {
 			if (ca.getId().contains(filterText)) {
-				countMatch++;
+				countMatch2++;
 				matchString = ca.getId(); 
+				Utilities.log("Category " + ca.getId() + " matches the string " + filterText + ".¡±");
 			}
 		}
-		if (countMatch == 1) {
-			o.setAccountId(matchString);
+		if (countMatch2 == 1) {
+			o.setCategoryId(matchString);
+		}
+		
+		if (countMatch1 == 0 && countMatch2 == 0) {
+			o.setRemark(filterText);
 		}
 		return o;
 	}

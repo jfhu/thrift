@@ -230,7 +230,6 @@ public class ThriftGUI extends JFrame {
 				for (int i = n.length-1; i >= 0; i--) {
 					engine.getData().remove(table.convertRowIndexToModel(n[i]));
 					Utilities.log(engine.getData());
-					Utilities.log(n[i] +"," +table.convertRowIndexToModel(n[i]));
 				}
 //				engine.getEntryTableModel().getTable().clearSelection();
 				engine.getEntryTableModel().update();
