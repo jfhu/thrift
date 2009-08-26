@@ -567,6 +567,7 @@ class JCalendar extends JPanel {
 			s = jMonth.getText();
 		}
 		month = Integer.parseInt(s) - 1;
+		/* Month should be valid */
 		if (month > 11) {
 			month = 11;
 		}
