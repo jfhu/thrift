@@ -205,7 +205,9 @@ public class ThriftGUI extends JFrame {
 		addEntry.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				engine.addEntry(new Entry(false, "Acc", "Cat", 0.0, "C", "Remark", new Date()));
+				Utilities.log("Filter text: " + engine.getEntryTableModel().getFilterText());
+				Entry newEntry = engine.checkFilterTextMatch(engine.getEntryTableModel().getFilterText());
+				engine.addEntry(newEntry);
 				engine.getEntryTableModel().update();
 			}
 		});
@@ -214,7 +216,17 @@ public class ThriftGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JTable table = engine.getEntryTableModel().getTable();
-				int[] n=table.getSelectedRows();
+				int[] n = table.getSelectedRows();
+				if (n.length < 1) {
+					JOptionPane.showMessageDialog(null, "请先选择记录");
+					return;
+				}
+				int confirm = JOptionPane.showConfirmDialog(null,
+						"你真的想移除这" + n.length + "条记录吗?", "移除记录", 
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (confirm == JOptionPane.NO_OPTION) {
+					return;
+				}
 				for (int i = n.length-1; i >= 0; i--) {
 					engine.getData().remove(table.convertRowIndexToModel(n[i]));
 					Utilities.log(engine.getData());
