@@ -103,9 +103,6 @@ public class Engine {
 			Utilities.log("Error saving file."); //$NON-NLS-1$
 		}
 		
-//		TODO temporary
-		//dataModified = true;
-		
 		threadExchangeRate.start();
 	}
 	
