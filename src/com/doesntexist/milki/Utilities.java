@@ -21,7 +21,7 @@ public final class Utilities {
 	 * Log.
 	 * @param words the message
 	 */
-	public static void log(final String words) {
+	public static void log(final Object words) {
 		Date current = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		String time = format.format(current);

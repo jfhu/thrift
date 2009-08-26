@@ -21,7 +21,7 @@ public class Entry implements Comparable<Entry>, Serializable{
 	private String categoryId;
 	
 	/** The amount. */
-	private int amount;
+	private double amount;
 	
 	/** The currency id. */
 	private String currencyId;
@@ -68,7 +68,7 @@ public class Entry implements Comparable<Entry>, Serializable{
 	 * Gets the amount.
 	 * @return the amount
 	 */
-	public final int getAmount() {
+	public final double getAmount() {
 		return amount;
 	}
 
@@ -96,23 +96,47 @@ public class Entry implements Comparable<Entry>, Serializable{
 		return date;
 	}
 
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public void setAmount(Double value) {
+		this.amount = value;
+	}
+
+	public void setCurrencyId(String currencyId) {
+		this.currencyId = currencyId;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 	/**
 	 * Instantiates a new entry.
 	 * 
 	 * @param valid the valid
 	 * @param accountId the account id
 	 * @param categoryId the category id
-	 * @param amount the amount
+	 * @param d the amount
 	 * @param currencyId the currency id
 	 * @param remark the remark
 	 * @param date the date
 	 */
 	public Entry(final boolean valid, final String accountId, final String categoryId,
-			final int amount, final String currencyId, final String remark, final Date date) {
+			final double d, final String currencyId, final String remark, final Date date) {
 		this.valid = valid;
 		this.accountId = accountId;
 		this.categoryId = categoryId;
-		this.amount = amount;
+		this.amount = d;
 		this.currencyId = currencyId;
 		this.remark = remark;
 		this.date = date;
@@ -130,6 +154,12 @@ public class Entry implements Comparable<Entry>, Serializable{
 		} else {
 			return 0;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "" + ((Boolean)isValid()).toString() + "," + getAccountId() + "," + getCategoryId() + ","
+			+ getAmount() + "," + getCurrencyId() + "," + getRemark() + "," + getDate();
 	}
 	
 }
