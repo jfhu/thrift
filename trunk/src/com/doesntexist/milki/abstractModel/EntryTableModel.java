@@ -39,6 +39,7 @@ import javax.swing.table.TableRowSorter;
 import org.jfree.ui.DateChooserPanel;
 
 import com.doesntexist.milki.Engine;
+import com.doesntexist.milki.Messages;
 import com.doesntexist.milki.Utilities;
 
 public class EntryTableModel extends AbstractTableModel {
@@ -50,7 +51,7 @@ public class EntryTableModel extends AbstractTableModel {
 	private EntryTableModel model;
 	
 	private String[] columnNames = 
-		{"有效", "账户", "金额", "分类", "备注", "日期" };
+		{Messages.getString("EntryTableModel.Valid"), Messages.getString("EntryTableModel.Account"), Messages.getString("EntryTableModel.Amount"), Messages.getString("EntryTableModel.Category"), Messages.getString("EntryTableModel.Remark"), Messages.getString("EntryTableModel.Date") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
 	private ArrayList<Entry> data = new ArrayList<Entry>();
 
@@ -73,9 +74,9 @@ public class EntryTableModel extends AbstractTableModel {
 		table.setRowSorter(sorter);
 		table.getModel().addTableModelListener(engine.getEntryTableModelListener());
 		table.setPreferredScrollableViewportSize(
-				new Dimension(table.getPreferredSize().width, 300));
+				new Dimension(table.getPreferredSize().width, 400));
 	    table.setFillsViewportHeight(true);
-	    table.setDefaultEditor(Date.class, new EntryDateEditor(new SimpleDateFormat("yyyy-M-d")));
+	    table.setDefaultEditor(Date.class, new EntryDateEditor(new SimpleDateFormat("yyyy-M-d"))); //$NON-NLS-1$
 	    model.fireTableDataChanged();
 
 	    //selection
@@ -102,7 +103,7 @@ public class EntryTableModel extends AbstractTableModel {
 	    
 	    //Filter section
 	    JPanel form = new JPanel(new BorderLayout());
-	    JLabel l1 = new JLabel("过滤:", SwingConstants.TRAILING);
+	    JLabel l1 = new JLabel(Messages.getString("EntryTableModel.Filter"), SwingConstants.TRAILING); //$NON-NLS-1$
 	    form.add(l1, BorderLayout.WEST);
 	    filterText = new JTextField();
 	    filterText.getDocument().addDocumentListener(
@@ -122,7 +123,7 @@ public class EntryTableModel extends AbstractTableModel {
 	    		});
 	    l1.setLabelFor(filterText);
 	    form.add(filterText, BorderLayout.CENTER);
-	    JButton clearButton = new JButton("X");
+	    JButton clearButton = new JButton("X"); //$NON-NLS-1$
 	    clearButton.setBorder(null);
 	    clearButton.setContentAreaFilled(false);
 	    Font buttonFont = clearButton.getFont();
@@ -131,7 +132,7 @@ public class EntryTableModel extends AbstractTableModel {
 	    clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filterText.setText("");
+				filterText.setText(""); //$NON-NLS-1$
 			}
 		});
 	    form.add(clearButton, BorderLayout.EAST);
@@ -150,6 +151,7 @@ public class EntryTableModel extends AbstractTableModel {
 	    categoryColumn.setMaxWidth(100);
 	    remarkColumn.setMinWidth(100);
 	    dateColumn.setMaxWidth(150);
+	    dateColumn.setMinWidth(100);
 	    
 	    //set combo box columns
 	    ArrayList<Account> accountList = engine.getAccountList();
@@ -187,8 +189,8 @@ public class EntryTableModel extends AbstractTableModel {
 			public boolean include(final
 					Entry<? extends EntryTableModel, ? extends Object> entry) {
 				/* Special judgment for Date */
-				String forTest = new SimpleDateFormat("yyyyMMddMMMMEEEE").format(((Date) entry.getValue(entry.getValueCount()-1)))
-					+ new SimpleDateFormat("MMMMEEEE", Locale.US).format(((Date) entry.getValue(entry.getValueCount()-1)));
+				String forTest = new SimpleDateFormat("yyyyMMddMMMMEEEE").format(((Date) entry.getValue(entry.getValueCount()-1))) //$NON-NLS-1$
+					+ new SimpleDateFormat("MMMMEEEE", Locale.US).format(((Date) entry.getValue(entry.getValueCount()-1))); //$NON-NLS-1$
 				/* Sample: 20090826八月星期三AugustWednesday */
 				if (forTest.toLowerCase().contains(filterText.getText().toLowerCase())) {
 					return true;
@@ -301,11 +303,11 @@ public class EntryTableModel extends AbstractTableModel {
         int numRows = getRowCount();
         
         for (int i=0; i < numRows; i++) {
-            System.out.print("row " + i + ": ");
+            System.out.print("row " + i + ": "); //$NON-NLS-1$ //$NON-NLS-2$
             System.out.print(data.get(i));
             System.out.println();
         }
-        System.out.println("--------------------------");
+        System.out.println("--------------------------"); //$NON-NLS-1$
     }
 	
 	/*public static void main(String[] argrs) {

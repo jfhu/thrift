@@ -63,10 +63,10 @@ public class PieChart {
 	}
 	
 	private DefaultPieDataset generateRandomDataset() {
-		String[] section = new String[] { "图书","食物","水果","交通","其它"};
+		String[] section = new String[] { "图书","食物","水果","交通","其它"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		double[] data = new double[section.length];   
 		for (int i = 0; i < data.length; i++) {
-			data[i] = 10 + Double.parseDouble(new DecimalFormat("0.0").format((Math.random() * 100)));
+			data[i] = 10 + Double.parseDouble(new DecimalFormat("0.0").format((Math.random() * 100))); //$NON-NLS-1$
 		}
 
 		 DefaultPieDataset dataset = new DefaultPieDataset();   
@@ -83,7 +83,7 @@ public class PieChart {
 	}   
 
 	public  JPanel getPieChartPanel() {
-		Utilities.log("Generating pie chart...");
+		Utilities.log("Generating pie chart..."); //$NON-NLS-1$
 		JFreeChart chart = createChart(getDataset());
 		chart.setBackgroundPaint(null);
 		chart.getLegend().setPosition(RectangleEdge.RIGHT);
@@ -91,10 +91,10 @@ public class PieChart {
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setForegroundAlpha(0.5F);
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator(
-				"{0}\n${1}\n{2}", NumberFormat.getNumberInstance(),
-				new DecimalFormat("0.0%")));
+				"{0}\n${1}\n{2}", NumberFormat.getNumberInstance(), //$NON-NLS-1$
+				new DecimalFormat("0.0%"))); //$NON-NLS-1$
 		plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-		plot.setNoDataMessage("没有数据");
+		plot.setNoDataMessage(Messages.getString("PieChart.noData")); //$NON-NLS-1$
 		plot.setBackgroundPaint(null);
 		plot.setStartAngle(startAngle);
 		

@@ -47,11 +47,14 @@ import com.doesntexist.milki.abstractModel.EntryTableModelListener;
  * The Class ThriftGUI.
  */
 public class ThriftGUI extends JFrame {
+	/** Deals with I18N and L10N */
+	private Messages local = new Messages();
+	
 	/** The main frame. */
 	private static ThriftGUI jFrame;
 	
 	/** The title. */
-	private static String title = new String("Thrift - 俭，德之共也；侈，恶之大也");
+	private static String title;
 	
 	/** The Constant width. */
 	private static final int WIDTH = 1000;
@@ -87,12 +90,12 @@ public class ThriftGUI extends JFrame {
 	private JMenuBar menuBar = new JMenuBar();
 	
 	/** The edit menu. */
-	private JMenu editMenu = new JMenu("编辑", true);
-	private JMenu fileMenu = new JMenu("文件", true);
+	private JMenu editMenu;
+	private JMenu fileMenu;
 	
 	/** The preferences item. */
-	private JMenuItem preferencesItem = new JMenuItem("偏好设置...");
-	private JMenuItem saveDataItem = new JMenuItem("保存");
+	private JMenuItem preferencesItem;
+	private JMenuItem saveDataItem;
 	
 	/** The s exchange rate display. */
 	private JLabel sExchangeRateDisplay = new JLabel() {
@@ -128,13 +131,13 @@ public class ThriftGUI extends JFrame {
 				try {
 					sExchangeRateDisplay.setToolTipText(
 							engine.getExchangeDate());
-					displayLabel.setText("<html>" 
+					displayLabel.setText("<html>"  //$NON-NLS-1$
 							+ engine.getExchangeRateLongString() 
-							+ 	" <a href=\"http://www.xe.com\">XE.com" 
-							+ "</a></html>");
+							+ 	" <a href=\"http://www.xe.com\">XE.com"  //$NON-NLS-1$
+							+ "</a></html>"); //$NON-NLS-1$
 				Thread.sleep(100);
 				} catch (Exception e) {
-					Utilities.log("Error refresh exchange rate.");
+					Utilities.log("Error refresh exchange rate."); //$NON-NLS-1$
 				}
 			}
 			
@@ -148,6 +151,12 @@ public class ThriftGUI extends JFrame {
 	 * Instantiates a new thrift GUI.
 	 */
 	public ThriftGUI() {
+		title = new String(Messages.getString("ThriftGUI.title")); //$NON-NLS-1$
+		editMenu = new JMenu(Messages.getString("ThriftGUI.Edit"), true); //$NON-NLS-1$
+		fileMenu = new JMenu(Messages.getString("ThriftGUI.File"), true); //$NON-NLS-1$
+		preferencesItem = new JMenuItem(Messages.getString("ThriftGUI.Preferences")); //$NON-NLS-1$
+		saveDataItem = new JMenuItem(Messages.getString("ThriftGUI.Save")); //$NON-NLS-1$
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(title);
 		setSize(new Dimension(WIDTH, HEIGHT));
@@ -158,13 +167,13 @@ public class ThriftGUI extends JFrame {
 				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				if (engine.isDataModified()) {
 					int choice = JOptionPane.showConfirmDialog(null, 
-							"还有未保存的记录,是否保存?", "警告", JOptionPane.YES_NO_CANCEL_OPTION);
+							Messages.getString("ThriftGUI.WarnBeforeExit"), Messages.getString("ThriftGUI.Warning"), JOptionPane.YES_NO_CANCEL_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
 					if (choice == JOptionPane.YES_OPTION) {
 						try {
 							engine.saveData();
 						} catch (IOException e1) {
 							e1.printStackTrace();
-							JOptionPane.showMessageDialog(null, "保存数据失败！", "错误", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, Messages.getString("ThriftGUI.DataSaveFail"), Messages.getString("ThriftGUI.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 							setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 						}
 					} else if (choice == JOptionPane.NO_OPTION) {
@@ -204,11 +213,11 @@ public class ThriftGUI extends JFrame {
 		sExchangeRateDisplay.setText(engine.getExchangeRateLongString());
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 		ToolTipManager.sharedInstance().setDismissDelay(2000);
-		sExchangeRateDisplay.setToolTipText("Loading...");
+		sExchangeRateDisplay.setToolTipText(Messages.getString("ThriftGUI.Loading")); //$NON-NLS-1$
 		sExchangeRateDisplay.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(final MouseEvent e) {
 				try {
-					Desktop.getDesktop().browse(new URI("http://www.xe.com"));
+					Desktop.getDesktop().browse(new URI("http://www.xe.com")); //$NON-NLS-1$
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -223,24 +232,24 @@ public class ThriftGUI extends JFrame {
 		pieChartPanel.add(pieChartInnerPanel, BorderLayout.CENTER);
 
 		pieChartOptionPanelUp.setLayout(new FlowLayout());
-		pieChartOptionPanelUp.add(new JLabel("圆饼图:"));
+		pieChartOptionPanelUp.add(new JLabel(Messages.getString("ThriftGUI.PieChart"))); //$NON-NLS-1$
 		JComboBox pieChartOptionComboBox = new JComboBox();
-		pieChartOptionComboBox.addItem("全部-按分类");
-		pieChartOptionComboBox.addItem("全部-按账户");
-		pieChartOptionComboBox.addItem("一个月-按分类");
-		pieChartOptionComboBox.addItem("一个月-按账户");
-		pieChartOptionComboBox.addItem("一周-按分类");
-		pieChartOptionComboBox.addItem("一周-按账户");
-		pieChartOptionComboBox.addItem("一天-按分类");
-		pieChartOptionComboBox.addItem("一天-按账户");
-		pieChartOptionComboBox.setToolTipText("选择圆饼图显示范围");
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.AllByCategory")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.AllByAccount")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.MonthByCategory")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.MonthByAccount")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.WeekByCategory")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.WeekByAccount")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.DayByCategory")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.DayByAccount")); //$NON-NLS-1$
+		pieChartOptionComboBox.setToolTipText(Messages.getString("ThriftGUI.SetPieChartDisplay")); //$NON-NLS-1$
 		pieChartOptionPanelUp.add(pieChartOptionComboBox);
 		pieChartOptionPanelDown.setLayout(new FlowLayout());
-		JButton addEntry = new JButton("+");
+		JButton addEntry = new JButton("+"); //$NON-NLS-1$
 		addEntry.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Utilities.log("Filter text: " + engine.getEntryTableModel().getFilterText());
+				Utilities.log("Filter text: " + engine.getEntryTableModel().getFilterText()); //$NON-NLS-1$
 				Entry newEntry = engine.checkFilterTextMatch(engine.getEntryTableModel().getFilterText());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(newEntry.getDate());
@@ -254,18 +263,18 @@ public class ThriftGUI extends JFrame {
 				engine.getEntryTableModel().getModel().fireTableDataChanged();
 			}
 		});
-		JButton removeEntry = new JButton("-");
+		JButton removeEntry = new JButton("-"); //$NON-NLS-1$
 		removeEntry.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JTable table = engine.getEntryTableModel().getTable();
 				int[] n = table.getSelectedRows();
 				if (n.length < 1) {
-					JOptionPane.showMessageDialog(null, "请先选择记录");
+					JOptionPane.showMessageDialog(null, Messages.getString("ThriftGUI.NoEntrySelect")); //$NON-NLS-1$
 					return;
 				}
 				int confirm = JOptionPane.showConfirmDialog(null,
-						"你真的想移除这" + ((n.length>1)?n.length:"") + "条记录吗?", "确认移除", 
+						Messages.getString("ThriftGUI.RemoveEntryConfirmA") + ((n.length>1)?n.length:"") + Messages.getString("ThriftGUI.RemoveEntryConfirmB"), Messages.getString("ThriftGUI.RemoveDialogTitle"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (confirm == JOptionPane.NO_OPTION) {
 					return;
@@ -277,13 +286,13 @@ public class ThriftGUI extends JFrame {
 				engine.getEntryTableModel().getModel().fireTableDataChanged();
 			}
 		});
-		addEntry.setToolTipText("增加一条记录");
-		removeEntry.setToolTipText("移除选中的记录");
+		addEntry.setToolTipText(Messages.getString("ThriftGUI.AddEntryToolTip")); //$NON-NLS-1$
+		removeEntry.setToolTipText(Messages.getString("ThriftGUI.RemoveEntryToolTip")); //$NON-NLS-1$
 		pieChartOptionPanelDown.add(addEntry);
 		pieChartOptionPanelDown.add(removeEntry);
-		pieChartOptionPanelDown.add(new JLabel("合计: "));
+		pieChartOptionPanelDown.add(new JLabel(Messages.getString("ThriftGUI.TotalAmount"))); //$NON-NLS-1$
 		pieChartOptionPanelDown.add(pieChartOptionPanelSum);
-		pieChartOptionPanelSum.setText("N/A");
+		pieChartOptionPanelSum.setText(Messages.getString("ThriftGUI.NotAvailable")); //$NON-NLS-1$
 		pieChartOptionPanelSum.setHorizontalAlignment(JLabel.RIGHT);
 //		pieChartOptionPanelDown.add(new JLabel("加元"));
 		
@@ -314,14 +323,14 @@ public class ThriftGUI extends JFrame {
 		saveDataItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Utilities.log("Saving data.");
+				Utilities.log("Saving data."); //$NON-NLS-1$
 				try {
 					engine.saveData();
-					JOptionPane.showMessageDialog(null, "保存数据成功！");
-					Utilities.log("Data saved.");
+					JOptionPane.showMessageDialog(null, Messages.getString("ThriftGUI.SaveDataSucceed")); //$NON-NLS-1$
+					Utilities.log("Data saved."); //$NON-NLS-1$
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "保存数据失败！", "错误", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, Messages.getString("ThriftGUI.SaveDateFailed"), Messages.getString("ThriftGUI.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 				} 
 			}
 		});
@@ -333,17 +342,17 @@ public class ThriftGUI extends JFrame {
 				KeyEvent.VK_COMMA, InputEvent.META_DOWN_MASK));
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 
-						InputEvent.META_DOWN_MASK), "preferences");
-		getRootPane().getActionMap().put("preferences", new AbstractAction() { 
+						InputEvent.META_DOWN_MASK), "preferences"); //$NON-NLS-1$
+		getRootPane().getActionMap().put("preferences", new AbstractAction() {  //$NON-NLS-1$
 				public void actionPerformed(final ActionEvent e) {
-					Utilities.log("Lauch preferences pane by keyboard.");
+					Utilities.log("Lauch preferences pane by keyboard."); //$NON-NLS-1$
 					preferencePane = new PreferencesDialog(jFrame);
 				} 
 		});
 		preferencesItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				Utilities.log("Lauch preferences pane from menu.");
+				Utilities.log("Lauch preferences pane from menu."); //$NON-NLS-1$
 				preferencePane = new PreferencesDialog(jFrame);
 			}
 		});
@@ -376,11 +385,11 @@ public class ThriftGUI extends JFrame {
 	public static void main(final String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				if (System.getProperty("os.name").equals("Mac OS X")) {
-					Utilities.log("Changed to Mac look and feel.");
+				if (System.getProperty("os.name").equals("Mac OS X")) { //$NON-NLS-1$ //$NON-NLS-2$
+					Utilities.log("Changed to Mac look and feel."); //$NON-NLS-1$
 					try {
 						UIManager.setLookAndFeel(
-								"javax.swing.plaf.metal.MetalLookAndFeel");
+								"javax.swing.plaf.metal.MetalLookAndFeel"); //$NON-NLS-1$
 					} catch (Exception e) {
 						e.printStackTrace();
 					} 

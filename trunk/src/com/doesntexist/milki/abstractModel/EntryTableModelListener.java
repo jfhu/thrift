@@ -28,7 +28,7 @@ public class EntryTableModelListener implements TableModelListener {
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		Utilities.log("Table changed event received.");
+		Utilities.log("Table changed event received."); //$NON-NLS-1$
 		engine.sortData();
 		
 		/* update total amount */
@@ -37,7 +37,7 @@ public class EntryTableModelListener implements TableModelListener {
 		for (Entry en : data) {
 			totalAmount += en.getAmount();
 		}
-		gui.getPieChartOptionPanelSum().setText("$" + new DecimalFormat("0.00").format(totalAmount));
+		gui.getPieChartOptionPanelSum().setText("$" + new DecimalFormat("0.00").format(totalAmount)); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		/* update pie chart */
 		PieChart pieChart = engine.getPieChart();
