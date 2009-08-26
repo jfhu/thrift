@@ -14,6 +14,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 
@@ -37,13 +40,14 @@ import javax.swing.table.DefaultTableModel;
 
 import com.doesntexist.milki.abstractModel.Entry;
 import com.doesntexist.milki.abstractModel.EntryTableModel;
+import com.doesntexist.milki.abstractModel.EntryTableModelListener;
 
 /**
  * The Class ThriftGUI.
  */
 public class ThriftGUI extends JFrame {
 	/** The main frame. */
-	private static JFrame jFrame;
+	private static ThriftGUI jFrame;
 	
 	/** The title. */
 	private static String title = new String("Thrift - 俭，德之共也；侈，恶之大也");
@@ -147,9 +151,34 @@ public class ThriftGUI extends JFrame {
 		setTitle(title);
 		setSize(new Dimension(WIDTH, HEIGHT));
 		setLayout(new BorderLayout());
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				if (engine.isDataModified()) {
+					int choice = JOptionPane.showConfirmDialog(null, 
+							"还有未保存的记录,是否保存?", "警告", JOptionPane.YES_NO_CANCEL_OPTION);
+					if (choice == JOptionPane.YES_OPTION) {
+						try {
+							engine.saveData();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+							JOptionPane.showMessageDialog(null, "保存数据失败！", "错误", JOptionPane.ERROR_MESSAGE);
+							setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						}
+					} else if (choice == JOptionPane.NO_OPTION) {
+						setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					} else {
+						setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+					}
+				}
+				super.windowClosing(e);
+			}
+		});
 		
 		engine = new Engine();
 		exchangeRateRefresher.start();
+		engine.setEntryTableModelListener(new EntryTableModelListener(this, engine));
 		
 		setPanels();
 		setMenus();
@@ -157,6 +186,9 @@ public class ThriftGUI extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		/* initially set this false */
+		engine.setDataModified(false);
 	}
 
 	/**
@@ -184,8 +216,10 @@ public class ThriftGUI extends JFrame {
 		statusBar.setLayout(new FlowLayout());
 		statusBar.add(sExchangeRateDisplay);
 		
-		pieChartPanel = engine.getPieChart().getPieChartPanel();
+		JPanel pieChartInnerPanel = engine.getPieChart().getPieChartPanel();
+		pieChartPanel = new JPanel(new BorderLayout());
 		pieChartPanel.setPreferredSize(new Dimension(540, 290));
+		pieChartPanel.add(pieChartInnerPanel, BorderLayout.CENTER);
 
 		pieChartOptionPanelUp.setLayout(new FlowLayout());
 		pieChartOptionPanelUp.add(new JLabel("圆饼图:"));
@@ -229,21 +263,20 @@ public class ThriftGUI extends JFrame {
 				}
 				for (int i = n.length-1; i >= 0; i--) {
 					engine.getData().remove(table.convertRowIndexToModel(n[i]));
-					Utilities.log(engine.getData());
 				}
-//				engine.getEntryTableModel().getTable().clearSelection();
 				engine.getEntryTableModel().update();
+				engine.getEntryTableModel().getModel().fireTableDataChanged();
 			}
 		});
 		addEntry.setToolTipText("增加一条记录");
 		removeEntry.setToolTipText("移除选中的记录");
 		pieChartOptionPanelDown.add(addEntry);
 		pieChartOptionPanelDown.add(removeEntry);
-		pieChartOptionPanelDown.add(new JLabel("合计:"));
+		pieChartOptionPanelDown.add(new JLabel("合计: "));
 		pieChartOptionPanelDown.add(pieChartOptionPanelSum);
-		pieChartOptionPanelSum.setText("1290");
+		pieChartOptionPanelSum.setText("N/A");
 		pieChartOptionPanelSum.setHorizontalAlignment(JLabel.RIGHT);
-		pieChartOptionPanelDown.add(new JLabel("加元"));
+//		pieChartOptionPanelDown.add(new JLabel("加元"));
 		
 		pieChartOptionPanel.setLayout(new BorderLayout());
 		pieChartOptionPanel.add(pieChartOptionPanelUp, BorderLayout.NORTH);
@@ -319,6 +352,14 @@ public class ThriftGUI extends JFrame {
 		jFrame = new ThriftGUI();
 	}
 	
+	public JLabel getPieChartOptionPanelSum() {
+		return pieChartOptionPanelSum;
+	}
+	
+	public JPanel getPieChartPanel() {
+		return pieChartPanel;
+	}
+
 	/**
 	 * The main method.
 	 * @param args the arguments
