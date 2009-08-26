@@ -19,6 +19,7 @@ import com.doesntexist.milki.abstractModel.Account;
 import com.doesntexist.milki.abstractModel.Category;
 import com.doesntexist.milki.abstractModel.Entry;
 import com.doesntexist.milki.abstractModel.EntryTableModel;
+import com.doesntexist.milki.abstractModel.EntryTableModelListener;
 
 /**
  * The Class Engine.
@@ -30,6 +31,9 @@ public class Engine {
 	
 	/** The file name preference. */
 	private File fileNamePreference = new File("config.pref");
+	
+	/** Modification to the data? */
+	private boolean dataModified = false;
 	
 	/* System Preferences */
 	/** The option get exchange rate delay. */
@@ -60,13 +64,16 @@ public class Engine {
 	/** The table model. */
 	private EntryTableModel entryTableModel;
 	
+	/** The table model listener. */
+	private EntryTableModelListener entryTableModelListener;
+	
 	/* Methods */
 	/**
 	 * Instantiates a new engine.
 	 */
 	public Engine() {
 		calendar = new JCalendar();
-		pieChart = new PieChart();
+		pieChart = new PieChart(data, categoryList, accountList);
 		entryTableModel = new EntryTableModel();
 		entryTableModel.setEngine(this);
 		 
@@ -88,7 +95,12 @@ public class Engine {
 			data.clear();
 		}
 
-		
+		categoryList.clear();
+		categoryList.add(new Category("未分类"));
+		categoryList.add(new Category("食物"));
+		categoryList.add(new Category("水果"));
+		categoryList.add(new Category("交通"));
+		categoryList.add(new Category("其他"));
 		
 		try {
 			savePreference();
@@ -97,6 +109,9 @@ public class Engine {
 			e.printStackTrace();
 			Utilities.log("Error saving file.");
 		}
+		
+//		TODO temporary
+		//dataModified = true;
 		
 		threadExchangeRate.start();
 	}
@@ -183,12 +198,13 @@ public class Engine {
 			out.writeObject(e);
 		}
 		out.close();
+		dataModified = false;
 	}
 
 	/**
 	 * Sort data.
 	 */
-	private void sortData() {
+	public void sortData() {
 		Collections.sort(data);
 	}
 	
@@ -260,6 +276,14 @@ public class Engine {
 		return categoryList;
 	}
 
+	public boolean isDataModified() {
+		return dataModified;
+	}
+
+	public void setDataModified(boolean dataModified) {
+		this.dataModified = dataModified;
+	}
+
 	public Entry checkFilterTextMatch(String filterText) {
 		int countMatch1 = 0;
 		String matchString = "";
@@ -295,5 +319,13 @@ public class Engine {
 			o.setRemark(filterText);
 		}
 		return o;
+	}
+
+	public void setEntryTableModelListener(EntryTableModelListener entryTableModelListener) {
+		this.entryTableModelListener = entryTableModelListener;
+	}
+
+	public EntryTableModelListener getEntryTableModelListener() {
+		return entryTableModelListener;
 	}
 }

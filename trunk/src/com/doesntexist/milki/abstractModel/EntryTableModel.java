@@ -2,7 +2,10 @@ package com.doesntexist.milki.abstractModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +13,8 @@ import java.util.Locale;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,8 +41,7 @@ import org.jfree.ui.DateChooserPanel;
 import com.doesntexist.milki.Engine;
 import com.doesntexist.milki.Utilities;
 
-public class EntryTableModel extends AbstractTableModel 
-												implements TableModelListener {
+public class EntryTableModel extends AbstractTableModel {
 	private JPanel tablePanel;
 	private JTextField filterText;
 	private JTable table;
@@ -67,10 +71,12 @@ public class EntryTableModel extends AbstractTableModel
 		sorter = new TableRowSorter<EntryTableModel>(model);
 		table = new JTable(model);
 		table.setRowSorter(sorter);
-		table.getModel().addTableModelListener(this);
+		table.getModel().addTableModelListener(engine.getEntryTableModelListener());
 		table.setPreferredScrollableViewportSize(
 				new Dimension(table.getPreferredSize().width, 300));
 	    table.setFillsViewportHeight(true);
+	    table.setDefaultEditor(Date.class, new EntryDateEditor(new SimpleDateFormat("yyyy-M-d")));
+	    model.fireTableDataChanged();
 
 	    //selection
 	    table.getSelectionModel().addListSelectionListener(
@@ -79,14 +85,14 @@ public class EntryTableModel extends AbstractTableModel
 					public void valueChanged(final ListSelectionEvent e) {
 						int viewRow = table.getSelectedRow();
 						if (viewRow < 0) {
-							Utilities.log("Selection got filtered away. " + viewRow);
+//							Utilities.log("Selection got filtered away. " + viewRow);
 						} else {
 							int modelRow = 
 								table.convertRowIndexToModel(viewRow);
-							Utilities.log(String.format(
-									"Selected Row in view: %d; "
-									+ "Selected Row in model: %d.",
-									viewRow, modelRow));
+//							Utilities.log(String.format(
+//									"Selected Row in view: %d; "
+//									+ "Selected Row in model: %d.",
+//									viewRow, modelRow));
 						}
 					}
 	    		});
@@ -116,6 +122,19 @@ public class EntryTableModel extends AbstractTableModel
 	    		});
 	    l1.setLabelFor(filterText);
 	    form.add(filterText, BorderLayout.CENTER);
+	    JButton clearButton = new JButton("X");
+	    clearButton.setBorder(null);
+	    clearButton.setContentAreaFilled(false);
+	    Font buttonFont = clearButton.getFont();
+	    clearButton.setFont(new Font(buttonFont.getName(), buttonFont.getStyle(), 9));
+	    clearButton.setPreferredSize(new Dimension(14,clearButton.getPreferredSize().height));
+	    clearButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				filterText.setText("");
+			}
+		});
+	    form.add(clearButton, BorderLayout.EAST);
 	    tablePanel.add(form);
 	    
 	    //set column width
@@ -127,19 +146,32 @@ public class EntryTableModel extends AbstractTableModel
 	    TableColumn dateColumn = table.getColumnModel().getColumn(5);
 	    validColumn.setMaxWidth(45);
 	    accountColumn.setMaxWidth(120);
-	    amountColumn.setMaxWidth(60);
+	    amountColumn.setMaxWidth(70);
 	    categoryColumn.setMaxWidth(100);
-	    remarkColumn.setMinWidth(60);
+	    remarkColumn.setMinWidth(100);
 	    dateColumn.setMaxWidth(150);
 	    
-	    //set combo-box columns
-//	    ArrayList<Account> accountList = engine.getAccountList();
-//	    ArrayList<Category> categoryList = engine.getCategoryList();
-	   model.data = engine.getData();
+	    //set combo box columns
+	    ArrayList<Account> accountList = engine.getAccountList();
+	    ArrayList<Category> categoryList = engine.getCategoryList();
+	    model.data = engine.getData();
+	    /* Set account list combo box */
+	    JComboBox comboBox = new JComboBox();
+	    for (Account ac : accountList) {
+	    		comboBox.addItem(ac.getId());
+	    }
+	    accountColumn.setCellEditor(new DefaultCellEditor(comboBox));
+	    /* Set category list combo box */
+	    comboBox = new JComboBox();
+	    for (Category ca : categoryList) {
+	    		comboBox.addItem(ca.getId());
+	    }
+	    categoryColumn.setCellEditor(new DefaultCellEditor(comboBox));
 	}
 	
 	public void update() {
 		table.updateUI();
+//		fireTableDataChanged();
 		newFilter();
 	}
 	
@@ -158,14 +190,13 @@ public class EntryTableModel extends AbstractTableModel
 				String forTest = new SimpleDateFormat("yyyyMMddMMMMEEEE").format(((Date) entry.getValue(entry.getValueCount()-1)))
 					+ new SimpleDateFormat("MMMMEEEE", Locale.US).format(((Date) entry.getValue(entry.getValueCount()-1)));
 				/* Sample: 20090826°ËÔÂÐÇÆÚÈýAugustWednesday */
-				Utilities.log(forTest);
-				if (forTest.toLowerCase().contains(filterText.getText())) {
+				if (forTest.toLowerCase().contains(filterText.getText().toLowerCase())) {
 					return true;
 				}
 				/* For other fields, simply check the string */
 				for (int i = entry.getValueCount() - 2; i >= 0; i--) {
-					if (entry.getStringValue(i).contains(
-							filterText.getText())) {
+					if (entry.getStringValue(i).toLowerCase().contains(
+							filterText.getText().toLowerCase())) {
 						return true;
 					}
 				}
@@ -249,15 +280,19 @@ public class EntryTableModel extends AbstractTableModel
 		} else if (col == 5) {
 			o.setDate((Date) value);
 		}
-		
 //		fireTableCellUpdated(row, col);
-		printDebugData();
+		fireTableDataChanged();
+//		printDebugData();
 	}
 
 	public JTable getTable() {
 		return table;
 	}
 	
+	public EntryTableModel getModel() {
+		return model;
+	}
+
 	public String getFilterText() {
 		return filterText.getText();
 	}
@@ -266,7 +301,7 @@ public class EntryTableModel extends AbstractTableModel
         int numRows = getRowCount();
         
         for (int i=0; i < numRows; i++) {
-            System.out.print("    row " + i + ":");
+            System.out.print("row " + i + ": ");
             System.out.print(data.get(i));
             System.out.println();
         }
@@ -286,14 +321,5 @@ public class EntryTableModel extends AbstractTableModel
         frame.setVisible(true);
 	}
 	*/
-
 	
-	@Override
-	public void tableChanged(TableModelEvent e) {
-		int row = e.getFirstRow();
-		int column = e.getColumn();
-		TableModel model = (TableModel)e.getSource();
-		Object o = model.getValueAt(row, column);
-		Utilities.log(o.toString());
-	}
 }
