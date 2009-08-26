@@ -215,7 +215,6 @@ public class Engine {
 	 */
 	public final void addEntry(final Entry o) {
 		data.add(o);
-		sortData();
 	}
 	
 	/* getters */
@@ -287,7 +286,7 @@ public class Engine {
 	public Entry checkFilterTextMatch(String filterText) {
 		int countMatch1 = 0;
 		String matchString = "";
-		Entry o = new Entry(false, "", "", 0, "", "新增加的记录", new Date());
+		Entry o = new Entry(false, "", categoryList.get(0).getId(), 0, "", "新增加的记录", new Date());
 		if (filterText.equals("")) {
 			return o;
 		}
