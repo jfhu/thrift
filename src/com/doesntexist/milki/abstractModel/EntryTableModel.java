@@ -38,6 +38,7 @@ public class EntryTableModel extends AbstractTableModel
 												implements TableModelListener {
 	private JPanel tablePanel;
 	private JTextField filterText;
+	private JTable table;
 	private TableRowSorter<EntryTableModel> sorter;
 	private Engine engine;
 	private EntryTableModel model;
@@ -240,9 +241,12 @@ public class EntryTableModel extends AbstractTableModel
 		printDebugData();
 	}
 
-	private JTable table;
 	public JTable getTable() {
 		return table;
+	}
+	
+	public String getFilterText() {
+		return filterText.getText();
 	}
 
 	private void printDebugData() {

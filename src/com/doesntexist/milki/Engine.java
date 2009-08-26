@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.File;
-import java.sql.Date;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,14 +72,23 @@ public class Engine {
 		 
 		try {
 			loadPreferences();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			Utilities.log("Error loading preferences.");
+			accountList.clear();
+			categoryList.clear();
+			accountList.add(new Account("默认账户", 0));
+			categoryList.add(new Category("默认分类"));
+		} 
+		try {
 			loadData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utilities.log("Error loading file.");
+			Utilities.log("Error loading data.");
 			data.clear();
 		}
 
-		//data.add(new Entry(true, "Account A", "Category A", 50, "CCC", "Buy Apple", new Date(2009, 8, 10)));
+		
 		
 		try {
 			savePreference();
@@ -101,6 +110,21 @@ public class Engine {
 		ObjectInputStream in = new ObjectInputStream(
 				new FileInputStream(fileNamePreference));
 		optionGetExchangeRateDelay = in.readInt();
+		//other options goes here
+		
+		/* Read Accounts Info */
+		int n = in.readInt();
+		for (int i = 0; i < n; i++) {
+			Account o = (Account) in.readObject();
+			accountList.add(o);
+		}
+		/* Read Category Info */
+		n = in.readInt();
+		for (int i = 0; i < n; i++) {
+			Category o = (Category) in.readObject();
+			categoryList.add(o);
+		}
+		/* Close Input Stream */
 		in.close();
 	}
 
@@ -113,6 +137,19 @@ public class Engine {
 		ObjectOutputStream out = new ObjectOutputStream(
 				new FileOutputStream(fileNamePreference));
 		out.writeInt(optionGetExchangeRateDelay);
+		//other options goes here
+		
+		/* Write Accounts Info */
+		out.writeInt(accountList.size());
+		for (Account ac : accountList) {
+			out.writeObject(ac);
+		}
+		/* Read Category Info */
+		out.writeInt(categoryList.size());
+		for (Category ca : categoryList) {
+			out.writeObject(ca);
+		}
+		/* Close Output Stream */
 		out.close();
 	}
 
@@ -221,5 +258,33 @@ public class Engine {
 
 	public ArrayList<Category> getCategoryList() {
 		return categoryList;
+	}
+
+	public Entry checkFilterTextMatch(String filterText) {
+		int countMatch = 0;
+		String matchString = "";
+		Entry o = new Entry(false, "", "", 0, "", "", new Date());
+		for (Account ac : accountList) {
+			if (ac.getId().contains(filterText)) {
+				countMatch++;
+				matchString = ac.getId(); 
+			}
+		}
+		if (countMatch == 1) {
+			o.setAccountId(matchString);
+		}
+		
+		countMatch = 0;
+		matchString = "";
+		for (Category ca : categoryList) {
+			if (ca.getId().contains(filterText)) {
+				countMatch++;
+				matchString = ca.getId(); 
+			}
+		}
+		if (countMatch == 1) {
+			o.setAccountId(matchString);
+		}
+		return o;
 	}
 }
