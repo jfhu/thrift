@@ -18,6 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
@@ -241,8 +242,16 @@ public class ThriftGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Utilities.log("Filter text: " + engine.getEntryTableModel().getFilterText());
 				Entry newEntry = engine.checkFilterTextMatch(engine.getEntryTableModel().getFilterText());
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(newEntry.getDate());
+				cal.set(Calendar.HOUR, 8);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				newEntry.setDate(cal.getTime());
 				engine.addEntry(newEntry);
 				engine.getEntryTableModel().update();
+				engine.getEntryTableModel().getModel().fireTableDataChanged();
 			}
 		});
 		JButton removeEntry = new JButton("-");
@@ -256,7 +265,7 @@ public class ThriftGUI extends JFrame {
 					return;
 				}
 				int confirm = JOptionPane.showConfirmDialog(null,
-						"你真的想移除这" + n.length + "条记录吗?", "移除记录", 
+						"你真的想移除这" + ((n.length>1)?n.length:"") + "条记录吗?", "确认移除", 
 						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (confirm == JOptionPane.NO_OPTION) {
 					return;

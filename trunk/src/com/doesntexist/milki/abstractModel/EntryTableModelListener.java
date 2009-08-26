@@ -29,6 +29,7 @@ public class EntryTableModelListener implements TableModelListener {
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		Utilities.log("Table changed event received.");
+		engine.sortData();
 		
 		/* update total amount */
 		ArrayList<Entry> data = engine.getData();
