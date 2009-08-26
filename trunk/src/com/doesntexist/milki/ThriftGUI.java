@@ -7,8 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,17 +14,11 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowListener;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
-import javax.swing.FocusManager;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -35,15 +27,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.table.DefaultTableModel;
+
+import com.doesntexist.milki.abstractModel.Entry;
+import com.doesntexist.milki.abstractModel.EntryTableModel;
 
 /**
  * The Class ThriftGUI.
@@ -80,16 +73,21 @@ public class ThriftGUI extends JFrame {
 	
 	/** The pie chart option panel. */
 	private JPanel pieChartOptionPanel = new JPanel();
+	private JPanel pieChartOptionPanelUp = new JPanel();
+	private JPanel pieChartOptionPanelDown = new JPanel();
+	private JLabel pieChartOptionPanelSum = new JLabel();
 	
 	/* JMenus below */
 	/** The menu bar. */
 	private JMenuBar menuBar = new JMenuBar();
 	
 	/** The edit menu. */
-	private JMenu editMenu = new JMenu("Edit", true);
+	private JMenu editMenu = new JMenu("编辑", true);
+	private JMenu fileMenu = new JMenu("文件", true);
 	
 	/** The preferences item. */
-	private JMenuItem preferencesItem = new JMenuItem("Preferences...");
+	private JMenuItem preferencesItem = new JMenuItem("偏好设置...");
+	private JMenuItem saveDataItem = new JMenuItem("保存");
 	
 	/** The s exchange rate display. */
 	private JLabel sExchangeRateDisplay = new JLabel() {
@@ -183,23 +181,72 @@ public class ThriftGUI extends JFrame {
 				}
 			}
 		});
+		statusBar.setLayout(new FlowLayout());
 		statusBar.add(sExchangeRateDisplay);
 		
 		pieChartPanel = engine.getPieChart().getPieChartPanel();
-		pieChartPanel.setPreferredSize(new Dimension(500, 300));
+		pieChartPanel.setPreferredSize(new Dimension(540, 290));
 
-		pieChartOptionPanel.setLayout(new FlowLayout());
-		pieChartOptionPanel.add(new JLabel("Pie Chart:"));
+		pieChartOptionPanelUp.setLayout(new FlowLayout());
+		pieChartOptionPanelUp.add(new JLabel("圆饼图:"));
 		JComboBox pieChartOptionComboBox = new JComboBox();
-		pieChartOptionComboBox.addItem("By Category");
-		pieChartOptionComboBox.addItem("By Account");
-		pieChartOptionPanel.add(pieChartOptionComboBox);
+		pieChartOptionComboBox.addItem("全部-按分类");
+		pieChartOptionComboBox.addItem("全部-按账户");
+		pieChartOptionComboBox.addItem("一个月-按分类");
+		pieChartOptionComboBox.addItem("一个月-按账户");
+		pieChartOptionComboBox.addItem("一周-按分类");
+		pieChartOptionComboBox.addItem("一周-按账户");
+		pieChartOptionComboBox.addItem("一天-按分类");
+		pieChartOptionComboBox.addItem("一天-按账户");
+		pieChartOptionComboBox.setToolTipText("选择圆饼图显示范围");
+		pieChartOptionPanelUp.add(pieChartOptionComboBox);
+		pieChartOptionPanelDown.setLayout(new FlowLayout());
+		JButton addEntry = new JButton("+");
+		addEntry.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				engine.addEntry(new Entry(false, "Acc", "Cat", 0.0, "C", "Remark", new Date()));
+				engine.getEntryTableModel().update();
+			}
+		});
+		JButton removeEntry = new JButton("-");
+		removeEntry.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JTable table = engine.getEntryTableModel().getTable();
+				int[] n=table.getSelectedRows();
+				for (int i = n.length-1; i >= 0; i--) {
+					engine.getData().remove(table.convertRowIndexToModel(n[i]));
+					Utilities.log(engine.getData());
+					Utilities.log(n[i] +"," +table.convertRowIndexToModel(n[i]));
+				}
+//				engine.getEntryTableModel().getTable().clearSelection();
+				engine.getEntryTableModel().update();
+			}
+		});
+		addEntry.setToolTipText("增加一条记录");
+		removeEntry.setToolTipText("移除选中的记录");
+		pieChartOptionPanelDown.add(addEntry);
+		pieChartOptionPanelDown.add(removeEntry);
+		pieChartOptionPanelDown.add(new JLabel("合计:"));
+		pieChartOptionPanelDown.add(pieChartOptionPanelSum);
+		pieChartOptionPanelSum.setText("1290");
+		pieChartOptionPanelSum.setHorizontalAlignment(JLabel.RIGHT);
+		pieChartOptionPanelDown.add(new JLabel("加元"));
+		
+		pieChartOptionPanel.setLayout(new BorderLayout());
+		pieChartOptionPanel.add(pieChartOptionPanelUp, BorderLayout.NORTH);
+		pieChartOptionPanel.add(pieChartOptionPanelDown, BorderLayout.SOUTH);
 		
 		northWestPanel.add(dateSelector, BorderLayout.NORTH);
 		northWestPanel.add(pieChartOptionPanel, BorderLayout.SOUTH);
 		northPanel.add(pieChartPanel, BorderLayout.CENTER);
 		northPanel.add(northWestPanel, BorderLayout.WEST);
 		
+		engine.getEntryTableModel().initialPanel();
+		entryList = engine.getEntryTableModel().getPanel();
+		
+		add(entryList, BorderLayout.CENTER);
 		add(northPanel, BorderLayout.NORTH);
 		add(statusBar, BorderLayout.SOUTH);
 	}
@@ -208,8 +255,29 @@ public class ThriftGUI extends JFrame {
 	 * Sets the menus.
 	 */
 	private void setMenus() {
+		/* File */
+		saveDataItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_S, InputEvent.META_DOWN_MASK));
+		saveDataItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Utilities.log("Saving data.");
+				try {
+					engine.saveData();
+					JOptionPane.showMessageDialog(null, "保存数据成功！");
+					Utilities.log("Data saved.");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "保存数据失败！", "错误", JOptionPane.ERROR_MESSAGE);
+				} 
+			}
+		});
+		fileMenu.add(saveDataItem);
+		
 		/* Edit */
 		/* - Preferences... */
+		preferencesItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_COMMA, InputEvent.META_DOWN_MASK));
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 
 						InputEvent.META_DOWN_MASK), "preferences");
@@ -228,7 +296,7 @@ public class ThriftGUI extends JFrame {
 		});
 		editMenu.add(preferencesItem);
 		
-		
+		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		setJMenuBar(menuBar);
 	}

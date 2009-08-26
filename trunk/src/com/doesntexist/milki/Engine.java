@@ -9,13 +9,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.File;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import com.doesntexist.milki.abstractModel.Account;
+import com.doesntexist.milki.abstractModel.Category;
 import com.doesntexist.milki.abstractModel.Entry;
+import com.doesntexist.milki.abstractModel.EntryTableModel;
 
 /**
  * The Class Engine.
@@ -37,6 +40,8 @@ public class Engine {
 	private ArrayList<Entry> data = new ArrayList<Entry>();
 	/** The Account list. */
 	private ArrayList<Account> accountList = new ArrayList<Account>();
+	/** The category list. */
+	private ArrayList<Category> categoryList = new ArrayList<Category>();
 	
 	/* Functionality */
 	/** The exchange rate. */
@@ -52,12 +57,18 @@ public class Engine {
 	/** The pie chart. */
 	private PieChart pieChart;
 	
+	/** The table model. */
+	private EntryTableModel entryTableModel;
+	
+	/* Methods */
 	/**
 	 * Instantiates a new engine.
 	 */
 	public Engine() {
 		calendar = new JCalendar();
 		pieChart = new PieChart();
+		entryTableModel = new EntryTableModel();
+		entryTableModel.setEngine(this);
 		 
 		try {
 			loadPreferences();
@@ -66,6 +77,16 @@ public class Engine {
 			e.printStackTrace();
 			Utilities.log("Error loading file.");
 			data.clear();
+		}
+
+		//data.add(new Entry(true, "Account A", "Category A", 50, "CCC", "Buy Apple", new Date(2009, 8, 10)));
+		
+		try {
+			savePreference();
+			saveData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Utilities.log("Error saving file.");
 		}
 		
 		threadExchangeRate.start();
@@ -117,7 +138,7 @@ public class Engine {
 	 * 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void saveData() throws IOException {
+	public final void saveData() throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(
 				new FileOutputStream(fileNameData));
 		out.writeInt(data.size());
@@ -142,11 +163,6 @@ public class Engine {
 	public final void addEntry(final Entry o) {
 		data.add(o);
 		sortData();
-		try {
-			saveData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/* getters */
@@ -165,6 +181,11 @@ public class Engine {
 	public final PieChart getPieChart() {
 		return pieChart;
 	}
+	
+	public EntryTableModel getEntryTableModel() {
+		return entryTableModel;
+	}
+
 	
 	/**
 	 * Gets the exchange rate.
@@ -188,5 +209,17 @@ public class Engine {
 	 */
 	public final String getExchangeRateLongString() {
 		return ExchangeRate.getLongString();
+	}
+	
+	public ArrayList<Entry> getData() {
+		return data;
+	}
+
+	public ArrayList<Account> getAccountList() {
+		return accountList;
+	}
+
+	public ArrayList<Category> getCategoryList() {
+		return categoryList;
 	}
 }
