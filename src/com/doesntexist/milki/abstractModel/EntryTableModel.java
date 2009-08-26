@@ -3,8 +3,10 @@ package com.doesntexist.milki.abstractModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -152,12 +154,21 @@ public class EntryTableModel extends AbstractTableModel
 			@Override
 			public boolean include(final
 					Entry<? extends EntryTableModel, ? extends Object> entry) {
-				for (int i = entry.getValueCount() - 1; i >= 0; i--) {
-				       if (entry.getStringValue(i).contains(
-				    		   	filterText.getText())) {
-				         return true;
-				       }
-				     }
+				/* Special judgment for Date */
+				String forTest = new SimpleDateFormat("yyyyMMddMMMMEEEE").format(((Date) entry.getValue(entry.getValueCount()-1)))
+					+ new SimpleDateFormat("MMMMEEEE", Locale.US).format(((Date) entry.getValue(entry.getValueCount()-1)));
+				/* Sample: 20090826°ËÔÂÐÇÆÚÈýAugustWednesday */
+				Utilities.log(forTest);
+				if (forTest.toLowerCase().contains(filterText.getText())) {
+					return true;
+				}
+				/* For other fields, simply check the string */
+				for (int i = entry.getValueCount() - 2; i >= 0; i--) {
+					if (entry.getStringValue(i).contains(
+							filterText.getText())) {
+						return true;
+					}
+				}
 				return false;
 			 }
 		};
@@ -262,7 +273,7 @@ public class EntryTableModel extends AbstractTableModel
         System.out.println("--------------------------");
     }
 	
-	public static void main(String[] argrs) {
+	/*public static void main(String[] argrs) {
 		JFrame frame = new JFrame("TableDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -274,6 +285,7 @@ public class EntryTableModel extends AbstractTableModel
         frame.pack();
         frame.setVisible(true);
 	}
+	*/
 
 	
 	@Override
@@ -282,7 +294,6 @@ public class EntryTableModel extends AbstractTableModel
 		int column = e.getColumn();
 		TableModel model = (TableModel)e.getSource();
 		Object o = model.getValueAt(row, column);
-//	TODO	engine.setData(row, column, data);
 		Utilities.log(o.toString());
 	}
 }

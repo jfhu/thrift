@@ -263,7 +263,7 @@ public class Engine {
 	public Entry checkFilterTextMatch(String filterText) {
 		int countMatch1 = 0;
 		String matchString = "";
-		Entry o = new Entry(false, "", "", 0, "", "", new Date());
+		Entry o = new Entry(false, "", "", 0, "", "新增加的记录", new Date());
 		if (filterText.equals("")) {
 			return o;
 		}
