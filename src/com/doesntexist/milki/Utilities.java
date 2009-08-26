@@ -23,9 +23,9 @@ public final class Utilities {
 	 */
 	public static void log(final Object words) {
 		Date current = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); //$NON-NLS-1$
 		String time = format.format(current);
-		System.out.println("[" + time + "] " +  words);
+		System.out.println("[" + time + "] " +  words); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
 

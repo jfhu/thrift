@@ -25,22 +25,22 @@ public class ExchangeRate implements Runnable {
 	private static int delay;
 	
 	/** The rate string. */
-	private static String rateStr = new String("(Loading...)");
+	private static String rateStr = new String(Messages.getString("ExchangeRate.Loading")); //$NON-NLS-1$
 	
 	/** The date string. */
-	private static String dateStr = new String("0000.00.00 00:00:00");
+	private static String dateStr = new String("0000.00.00 00:00:00"); //$NON-NLS-1$
 	
 	/** The date. */
 	private static Date date = Calendar.getInstance().getTime();
 	
 	/** The amount string. */
-	private static String amountStr = new String("100");
+	private static String amountStr = new String("100"); //$NON-NLS-1$
 	
 	/** The from string. */
-	private static String fromStr = new String("CAD");
+	private static String fromStr = new String("CAD"); //$NON-NLS-1$
 	
 	/** The to string. */
-	private static String toStr = new String("CNY");
+	private static String toStr = new String("CNY"); //$NON-NLS-1$
 	
 //	public String getContent(String strUrl) {
 //		try {
@@ -82,50 +82,50 @@ public class ExchangeRate implements Runnable {
 	 */
 	public final String getContent() {
 		try {
-			URL url = new URL("http://www.xe.com/ucc/convert.cgi");
-			System.setProperty("http.agent", "Mozilla/4.0");
+			URL url = new URL("http://www.xe.com/ucc/convert.cgi"); //$NON-NLS-1$
+			System.setProperty("http.agent", "Mozilla/4.0"); //$NON-NLS-1$ //$NON-NLS-2$
 			URLConnection connection = url.openConnection();
 			connection.setDoOutput(true);
 			OutputStreamWriter out = new OutputStreamWriter(
 					connection.getOutputStream());
-			out.write("Amount=" + amountStr + "&From=" + fromStr + "&To=" 
-					+ toStr	+ "&image.x=16&image.y=11&image=Submit");
+			out.write("Amount=" + amountStr + "&From=" + fromStr + "&To="  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ toStr	+ "&image.x=16&image.y=11&image=Submit"); //$NON-NLS-1$
 			out.flush();
 			out.close();
 			
 			String sCurrentLine;
 			String sTotalString;
-			sCurrentLine = "";
-			sTotalString = "";
+			sCurrentLine = ""; //$NON-NLS-1$
+			sTotalString = ""; //$NON-NLS-1$
 			InputStream lurlStream;
 			lurlStream = connection.getInputStream();
 			BufferedReader lReader = new BufferedReader(
 					new InputStreamReader(lurlStream));
 			while ((sCurrentLine = lReader.readLine()) != null) {
-				if (sCurrentLine.contains("Live rates at")) {
+				if (sCurrentLine.contains("Live rates at")) { //$NON-NLS-1$
 					dateStr = sCurrentLine.substring(
-									sCurrentLine.indexOf("XEsmall") + 23,
-									sCurrentLine.lastIndexOf(" UTC</span>"));
+									sCurrentLine.indexOf("XEsmall") + 23, //$NON-NLS-1$
+									sCurrentLine.lastIndexOf(" UTC</span>")); //$NON-NLS-1$
 					lReader.readLine();
 					lReader.readLine();
 					lReader.readLine();
 					sCurrentLine = lReader.readLine();
 					rateStr = sCurrentLine.substring(
-									sCurrentLine.indexOf("\"XE\">") + 5,
-									sCurrentLine.lastIndexOf(toStr + "<!--"));
-					sTotalString = dateStr + " " + rateStr;
+									sCurrentLine.indexOf("\"XE\">") + 5, //$NON-NLS-1$
+									sCurrentLine.lastIndexOf(toStr + "<!--")); //$NON-NLS-1$
+					sTotalString = dateStr + " " + rateStr; //$NON-NLS-1$
 					break;
 				}
 			}
 			
 			/* date string -> Date in local time zone */
-			SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+			SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"); //$NON-NLS-1$
 			Calendar cal = Calendar.getInstance();
 			Calendar calUTC;
 			TimeZone oldTimeZone = cal.getTimeZone();
 			try {
 				cal.setTime(df.parse(dateStr));
-				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+				cal.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 				calUTC = (Calendar) cal.clone();
 				cal.setTimeZone(oldTimeZone);
 				calUTC.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -135,16 +135,16 @@ public class ExchangeRate implements Runnable {
 				cal.getTime();
 				date = calUTC.getTime();
 			} catch (ParseException e) {
-				Utilities.log("Error parsing date.");
+				Utilities.log("Error parsing date."); //$NON-NLS-1$
 			} 
 			
 			/* return for printing */
 			return sTotalString;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			dateStr = new String("(unknown date)");
-			rateStr = new String("(unknown rate)");
-			return "Error: connection failed.";
+			dateStr = new String(Messages.getString("ExchangeRate.UnknownDate")); //$NON-NLS-1$
+			rateStr = new String(Messages.getString("ExchangeRate.UnknownRate")); //$NON-NLS-1$
+			return "Error: connection failed."; //$NON-NLS-1$
 		}
 	}
 	/**
@@ -168,7 +168,7 @@ public class ExchangeRate implements Runnable {
 	 * @return the long string
 	 */
 	public static String getLongString() {
-		return amountStr + " " + fromStr + " = " + getRate() + toStr;
+		return amountStr + " " + fromStr + " = " + getRate() + toStr; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
@@ -196,7 +196,7 @@ public class ExchangeRate implements Runnable {
 		while (true) {
 			try {
 				getContent();
-				Utilities.log(getDate() + " " + getLongString());
+				Utilities.log(getDate() + " " + getLongString()); //$NON-NLS-1$
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

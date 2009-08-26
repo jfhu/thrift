@@ -42,6 +42,7 @@ import javax.swing.UIManager;
  * @author milki
  */
 
+
 class JCalendar extends JPanel {
 	// 动态表示年月日
 	/** The year. */
@@ -216,33 +217,33 @@ class JCalendar extends JPanel {
 		jLabel1.setForeground(Color.red);
 		jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel1.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel1.setText("日");
+		jLabel1.setText(Messages.getString("JCalendar.SUN")); //$NON-NLS-1$
 		jLabel2.setForeground(Color.blue);
 		jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel2.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel2.setText("六");
+		jLabel2.setText(Messages.getString("JCalendar.SAT")); //$NON-NLS-1$
 		jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel3.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel3.setText("五");
+		jLabel3.setText(Messages.getString("JCalendar.FRI")); //$NON-NLS-1$
 		jLabel4.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel4.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel4.setText("四");
+		jLabel4.setText(Messages.getString("JCalendar.THU")); //$NON-NLS-1$
 		jLabel5.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel5.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel5.setText("三");
+		jLabel5.setText(Messages.getString("JCalendar.WED")); //$NON-NLS-1$
 		jLabel6.setBorder(null);
 		jLabel6.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel6.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel6.setText("二");
+		jLabel6.setText(Messages.getString("JCalendar.TUE")); //$NON-NLS-1$
 		jLabel7.setBackground(Color.lightGray);
 		jLabel7.setForeground(Color.black);
 		jLabel7.setBorder(null);
 		jLabel7.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel7.setHorizontalTextPosition(SwingConstants.CENTER);
-		jLabel7.setText("一");
+		jLabel7.setText(Messages.getString("JCalendar.MON")); //$NON-NLS-1$
 
 		weekPanel.setBackground(UIManager
-				.getColor("InternalFrame.activeTitleGradient"));
+				.getColor("InternalFrame.activeTitleGradient")); //$NON-NLS-1$
 		weekPanel.setBorder(BorderFactory.createEtchedBorder());
 		weekPanel.setLayout(new GridLayout(1, 7));
 		weekPanel.add(jLabel1, null);
@@ -274,14 +275,14 @@ class JCalendar extends JPanel {
 		});
 
 		jMonthDown.setBorder(null);
-		jMonthDown.setText("<-");
+		jMonthDown.setText("<-"); //$NON-NLS-1$
 		jMonthDown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				monthDownActionPerformed(e);
 			}
 		});
 		jMonthUp.setBorder(null);
-		jMonthUp.setText("->");
+		jMonthUp.setText("->"); //$NON-NLS-1$
 		jMonthUp.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				monthUpActionPerformed(e);
@@ -319,7 +320,7 @@ class JCalendar extends JPanel {
 		jYearDown.setMinimumSize(new Dimension(16, 16));
 		jYearDown.setPreferredSize(new Dimension(16, 16));
 		jYearDown.setSize(new Dimension(16, 16));
-		jYearDown.setText("-");
+		jYearDown.setText("-"); //$NON-NLS-1$
 		jYearDown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				yearDownActionPerformed(e);
@@ -330,7 +331,7 @@ class JCalendar extends JPanel {
 		jYearUp.setMinimumSize(new Dimension(16, 16));
 		jYearUp.setPreferredSize(new Dimension(16, 16));
 		jYearUp.setSize(new Dimension(16, 16));
-		jYearUp.setText("+");
+		jYearUp.setText("+"); //$NON-NLS-1$
 		jYearUp.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				yearUpActionPerformed(e);
@@ -465,7 +466,7 @@ class JCalendar extends JPanel {
 	 * Show month.
 	 */
 	void showMonth() {
-		jMonth.setText(Integer.toString(month + 1) + "月");
+		jMonth.setText(Integer.toString(month + 1) + Messages.getString("JCalendar.Month")); //$NON-NLS-1$
 	}
 
 	// 刷新年份
@@ -473,7 +474,7 @@ class JCalendar extends JPanel {
 	 * Show year.
 	 */
 	void showYear() {
-		jYear.setText(Integer.toString(year) + "年");
+		jYear.setText(Integer.toString(year) + Messages.getString("JCalendar.Year")); //$NON-NLS-1$
 	}
 
 	// 刷新日期
@@ -481,9 +482,9 @@ class JCalendar extends JPanel {
 	 * Show date.
 	 */
 	void showDate() {
-		DecimalFormat df = new DecimalFormat("00");
-		jOut.setText(Integer.toString(year) + "-" + df.format(month + 1)
-				+ "-" + df.format(day));
+		DecimalFormat df = new DecimalFormat("00"); //$NON-NLS-1$
+		jOut.setText(Integer.toString(year) + "-" + df.format(month + 1) //$NON-NLS-1$
+				+ "-" + df.format(day)); //$NON-NLS-1$
 	}
 
 	// 重画天数选择面板
@@ -505,7 +506,7 @@ class JCalendar extends JPanel {
 		for (; i < firstDayOfWeek - 1; i++) {
 			days[i].setEnabled(false);
 			days[i].setSelected(false);
-			days[i].setText("");
+			days[i].setText(""); //$NON-NLS-1$
 		}
 		int d = 1;
 		for (; d <= n; d++) {
@@ -521,7 +522,7 @@ class JCalendar extends JPanel {
 		for (; i < 42; i++) {
 			days[i].setEnabled(false);
 			days[i].setSelected(false);
-			days[i].setText("");
+			days[i].setText(""); //$NON-NLS-1$
 		}
 	}
 
@@ -560,8 +561,8 @@ class JCalendar extends JPanel {
 	 */
 	void inputMonth() {
 		String s;
-		if (jMonth.getText().endsWith("月")) {
-			s = jMonth.getText().substring(0, jMonth.getText().length() - 1);
+		if (jMonth.getText().endsWith(Messages.getString("JCalendar.Month"))) { //$NON-NLS-1$
+			s = jMonth.getText().substring(0, jMonth.getText().lastIndexOf(Messages.getString("JCalendar.Month")));  //$NON-NLS-1$
 		} else {
 			s = jMonth.getText();
 		}
@@ -611,8 +612,8 @@ class JCalendar extends JPanel {
 	 */
 	void inputYear() {
 		String s;
-		if (jYear.getText().endsWith("年")) {
-			s = jYear.getText().substring(0, jYear.getText().length() - 1);
+		if (jYear.getText().endsWith(Messages.getString("JCalendar.Year"))) { //$NON-NLS-1$
+			s = jYear.getText().substring(0, jYear.getText().lastIndexOf(Messages.getString("JCalendar.Year"))); //$NON-NLS-1$
 		} else {
 			s = jYear.getText();
 		}
@@ -640,7 +641,7 @@ class JCalendar extends JPanel {
 	 */
 	public void setDate(final String date) {
 		if (date != null) {
-			StringTokenizer f = new StringTokenizer(date, "-");
+			StringTokenizer f = new StringTokenizer(date, "-"); //$NON-NLS-1$
 			if (f.hasMoreTokens()) {
 				year = Integer.parseInt(f.nextToken());
 			}

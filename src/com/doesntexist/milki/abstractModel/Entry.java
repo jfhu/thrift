@@ -158,8 +158,8 @@ public class Entry implements Comparable<Entry>, Serializable{
 	
 	@Override
 	public String toString() {
-		return "" + ((Boolean)isValid()).toString() + "," + getAccountId() + "," + getCategoryId() + ","
-			+ getAmount() + "," + getCurrencyId() + "," + getRemark() + "," + getDate();
+		return "" + ((Boolean)isValid()).toString() + "," + getAccountId() + "," + getCategoryId() + "," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			+ getAmount() + "," + getCurrencyId() + "," + getRemark() + "," + getDate(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 }

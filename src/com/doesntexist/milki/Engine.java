@@ -27,10 +27,10 @@ import com.doesntexist.milki.abstractModel.EntryTableModelListener;
 public class Engine {
 	/* System settings */
 	/** The file name data. */
-	private File fileNameData = new File("entryData.data");
+	private File fileNameData = new File("entryData.data"); //$NON-NLS-1$
 	
 	/** The file name preference. */
-	private File fileNamePreference = new File("config.pref");
+	private File fileNamePreference = new File("config.pref"); //$NON-NLS-1$
 	
 	/** Modification to the data? */
 	private boolean dataModified = false;
@@ -81,33 +81,26 @@ public class Engine {
 			loadPreferences();
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			Utilities.log("Error loading preferences.");
+			Utilities.log("Error loading preferences."); //$NON-NLS-1$
 			accountList.clear();
 			categoryList.clear();
-			accountList.add(new Account("默认账户", 0));
-			categoryList.add(new Category("默认分类"));
+			accountList.add(new Account(Messages.getString("Engine.DefaultAccount"), 0)); //$NON-NLS-1$
+			categoryList.add(new Category(Messages.getString("Engine.DefaultCategory"))); //$NON-NLS-1$
 		} 
 		try {
 			loadData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utilities.log("Error loading data.");
+			Utilities.log("Error loading data."); //$NON-NLS-1$
 			data.clear();
 		}
 
-		categoryList.clear();
-		categoryList.add(new Category("未分类"));
-		categoryList.add(new Category("食物"));
-		categoryList.add(new Category("水果"));
-		categoryList.add(new Category("交通"));
-		categoryList.add(new Category("其他"));
-		
 		try {
 			savePreference();
 			saveData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utilities.log("Error saving file.");
+			Utilities.log("Error saving file."); //$NON-NLS-1$
 		}
 		
 //		TODO temporary
@@ -252,7 +245,7 @@ public class Engine {
 	 * @return the exchange date
 	 */
 	public final String getExchangeDate() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ExchangeRate.getDate());
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ExchangeRate.getDate()); //$NON-NLS-1$
 	}
 	
 	/**
@@ -285,16 +278,16 @@ public class Engine {
 
 	public Entry checkFilterTextMatch(String filterText) {
 		int countMatch1 = 0;
-		String matchString = "";
-		Entry o = new Entry(false, "", categoryList.get(0).getId(), 0, "", "新增加的记录", new Date());
-		if (filterText.equals("")) {
+		String matchString = ""; //$NON-NLS-1$
+		Entry o = new Entry(false, "", categoryList.get(0).getId(), 0, "", Messages.getString("Engine.NewlyAddedEntry"), new Date()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (filterText.equals("")) { //$NON-NLS-1$
 			return o;
 		}
 		for (Account ac : accountList) {
 			if (ac.getId().contains(filterText)) {
 				countMatch1++;
 				matchString = ac.getId();
-				Utilities.log("Account " + ac.getId() + " matches the string " + filterText + ".");
+				Utilities.log("Account " + ac.getId() + " matches the string " + filterText + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		if (countMatch1 == 1) {
@@ -302,12 +295,12 @@ public class Engine {
 		}
 		
 		int countMatch2 = 0;
-		matchString = "";
+		matchString = ""; //$NON-NLS-1$
 		for (Category ca : categoryList) {
 			if (ca.getId().contains(filterText)) {
 				countMatch2++;
 				matchString = ca.getId(); 
-				Utilities.log("Category " + ca.getId() + " matches the string " + filterText + ".”");
+				Utilities.log("Category " + ca.getId() + " matches the string " + filterText + ".”"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		if (countMatch2 == 1) {

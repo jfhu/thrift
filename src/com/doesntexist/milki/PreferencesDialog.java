@@ -48,16 +48,16 @@ import javax.swing.table.TableModel;
  */
 public class PreferencesDialog  extends JDialog {
 	public PreferencesDialog(final JFrame parent) {
-		super((JFrame) parent, "∆´∫√…Ë÷√", true);
+		super((JFrame) parent, Messages.getString("PreferencesDialog.title"), true); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "dispose");
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "dispose"); //$NON-NLS-1$
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK), "dispose");
-		getRootPane().getActionMap().put("dispose", new AbstractAction() { 
+				KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK), "dispose"); //$NON-NLS-1$
+		getRootPane().getActionMap().put("dispose", new AbstractAction() {  //$NON-NLS-1$
 				public void actionPerformed(final ActionEvent e) {
-					Utilities.log("Dispose the preference."); 
+					Utilities.log("Dispose the preference.");  //$NON-NLS-1$
 					dispose(); 
 				} 
 		}); 
