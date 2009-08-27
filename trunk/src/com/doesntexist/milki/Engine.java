@@ -71,8 +71,8 @@ public class Engine {
 	/**
 	 * Instantiates a new engine.
 	 */
-	public Engine() {
-		calendar = new JCalendar();
+	public Engine(ThriftGUI gui) {
+		calendar = new JCalendar(gui);
 		pieChart = new PieChart(data, categoryList, accountList);
 		entryTableModel = new EntryTableModel();
 		entryTableModel.setEngine(this);
@@ -95,6 +95,8 @@ public class Engine {
 			data.clear();
 		}
 
+		/* deal with the data here */
+		
 		try {
 			savePreference();
 			saveData();
@@ -276,7 +278,7 @@ public class Engine {
 	public Entry checkFilterTextMatch(String filterText) {
 		int countMatch1 = 0;
 		String matchString = ""; //$NON-NLS-1$
-		Entry o = new Entry(false, "", categoryList.get(0).getId(), 0, "", Messages.getString("Engine.NewlyAddedEntry"), new Date()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Entry o = new Entry(false, accountList.get(0).getId(), categoryList.get(0).getId(), 0, "", Messages.getString("Engine.NewlyAddedEntry"), new Date()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		if (filterText.equals("")) { //$NON-NLS-1$
 			return o;
 		}

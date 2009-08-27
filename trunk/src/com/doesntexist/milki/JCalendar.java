@@ -43,7 +43,7 @@ import javax.swing.UIManager;
  */
 
 
-class JCalendar extends JPanel {
+public class JCalendar extends JPanel {
 	// 动态表示年月日
 	/** The year. */
 	private int year = 0;
@@ -86,6 +86,7 @@ class JCalendar extends JPanel {
 	// 显示日期的位置
 	/** The Out. */
 	private JLabel jOut = new JLabel();
+
 	// 中国时区，以后可以从这里扩展可以设置时区的功能
 	/** The l. */
 	private Locale l = Locale.CHINESE;
@@ -130,11 +131,14 @@ class JCalendar extends JPanel {
 	/** The days for each month. */
 	private int[] mm = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
+	private ThriftGUI gui;
+
 	// 空日期构造函数
 	/**
 	 * Instantiates a new j calendar.
 	 */
-	public JCalendar() {
+	public JCalendar(ThriftGUI gui) {
+		this.gui = gui;
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -354,8 +358,9 @@ class JCalendar extends JPanel {
 				public void actionPerformed(final ActionEvent e) {
 					day = Integer.parseInt(((JToggleButton) e.getSource())
 							.getText());
-					showDate();
-					showDays();
+//					showDate();
+//					showDays();
+					showMe();
 				}
 			});
 			jDays.add(days[i]);
@@ -627,7 +632,7 @@ class JCalendar extends JPanel {
 		try {
 			year = Integer.parseInt(s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Utilities.log("Invalid year string.");
 		}
 		this.showMe();
 	}
@@ -738,6 +743,10 @@ class JCalendar extends JPanel {
 	public int getMonth() {
 		return month;
 	}
+	
+	public String getDisplay() {
+		return jOut.getText();
+	}
 
 	// 设置当前的月
 	/**
@@ -760,6 +769,11 @@ class JCalendar extends JPanel {
 		this.showMonth();
 		this.showYear();
 		this.showDate();
+		gui.updateTheChart();
+	}
+	
+	public void setThriftGUI(ThriftGUI gui) {
+		this.gui = gui;
 	}
 	
 	// 测试用
@@ -768,10 +782,10 @@ class JCalendar extends JPanel {
 	 * 
 	 * @param args the arguments
 	 */
-	public static void main(final String[] args) {
+	/*public static void main(final String[] args) {
 		JFrame f = new JFrame();
 		f.setContentPane(new JCalendar());
 		f.pack();
 		f.setVisible(true);
-	}
+	}*/
 }
