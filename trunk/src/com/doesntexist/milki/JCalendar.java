@@ -632,7 +632,7 @@ public class JCalendar extends JPanel {
 		try {
 			year = Integer.parseInt(s);
 		} catch (Exception e) {
-			Utilities.log("Invalid year string.");
+			Utilities.log("Invalid year string."); //$NON-NLS-1$
 		}
 		this.showMe();
 	}
