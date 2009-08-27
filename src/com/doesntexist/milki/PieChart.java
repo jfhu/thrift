@@ -42,7 +42,7 @@ public class PieChart {
 	
 	private DefaultPieDataset getDataset(int comboIndex, Calendar cal) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		Utilities.log("combo index:" + comboIndex);
+		Utilities.log("combo index:" + comboIndex); //$NON-NLS-1$
 		String[] section = null;
 		double[] data = null;
 //		TODO deal with the combo box
@@ -179,7 +179,7 @@ public class PieChart {
 				totalData += data[i];
 			}
 		}
-		ThriftGUI.getPieChartOptionPanelSum().setText("$" + new DecimalFormat("0.00").format(totalData));
+		ThriftGUI.getPieChartOptionPanelSum().setText("$" + new DecimalFormat("0.00").format(totalData)); //$NON-NLS-1$ //$NON-NLS-2$
 		return dataset;
 	}
 	

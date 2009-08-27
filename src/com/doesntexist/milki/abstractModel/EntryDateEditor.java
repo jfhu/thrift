@@ -21,18 +21,18 @@ public class EntryDateEditor extends DefaultCellEditor {
 	
 	public EntryDateEditor(DateFormat format) {
 		super(new JTextField());
-		getComponent().setName("Table.editor");
+		getComponent().setName("Table.editor"); //$NON-NLS-1$
 		if (format != null) {
 			this.format = format;
 		} else {
-			Utilities.log("No date format specified.");
+			Utilities.log("No date format specified."); //$NON-NLS-1$
 			format = new SimpleDateFormat();
 		}
 	}
 	
 	public boolean stopCellEditing() {
 		String s = (String)super.getCellEditorValue();
-		if ("".equals(s)) {
+		if ("".equals(s)) { //$NON-NLS-1$
 			super.stopCellEditing();
 		}
 		try {

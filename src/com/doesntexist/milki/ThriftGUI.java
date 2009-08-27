@@ -398,7 +398,7 @@ public class ThriftGUI extends JFrame {
 
 	public void updateTheChart() {
 		if (engine != null) {
-			Utilities.log("Updating the chart.");
+			Utilities.log("Updating the chart."); //$NON-NLS-1$
 			getPieChartPanel().removeAll();
 			getPieChartPanel().add(engine.getPieChart().
 					getPieChartPanel(getComboSelectedIndex(), engine.getCalendar().getDate()), BorderLayout.CENTER);
