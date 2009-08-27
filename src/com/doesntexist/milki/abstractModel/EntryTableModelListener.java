@@ -12,6 +12,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import com.doesntexist.milki.Engine;
+import com.doesntexist.milki.JCalendar;
 import com.doesntexist.milki.PieChart;
 import com.doesntexist.milki.ThriftGUI;
 import com.doesntexist.milki.Utilities;
@@ -42,7 +43,7 @@ public class EntryTableModelListener implements TableModelListener {
 		/* update pie chart */
 		PieChart pieChart = engine.getPieChart();
 		gui.getPieChartPanel().removeAll();
-		gui.getPieChartPanel().add(pieChart.getPieChartPanel(), BorderLayout.CENTER);
+		gui.getPieChartPanel().add(pieChart.getPieChartPanel(gui.getComboSelectedIndex(), engine.getCalendar().getDate()), BorderLayout.CENTER);
 		gui.getPieChartPanel().validate();
 		
 		engine.setDataModified(true);

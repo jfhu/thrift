@@ -33,10 +33,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableModel;
 
 import com.doesntexist.milki.abstractModel.Entry;
@@ -83,7 +88,9 @@ public class ThriftGUI extends JFrame {
 	private JPanel pieChartOptionPanel = new JPanel();
 	private JPanel pieChartOptionPanelUp = new JPanel();
 	private JPanel pieChartOptionPanelDown = new JPanel();
-	private JLabel pieChartOptionPanelSum = new JLabel();
+	private static JLabel pieChartOptionPanelSum = new JLabel();
+	
+	final JComboBox pieChartOptionComboBox = new JComboBox();
 	
 	/* JMenus below */
 	/** The menu bar. */
@@ -186,7 +193,7 @@ public class ThriftGUI extends JFrame {
 			}
 		});
 		
-		engine = new Engine();
+		engine = new Engine(this);
 		exchangeRateRefresher.start();
 		engine.setEntryTableModelListener(new EntryTableModelListener(this, engine));
 		
@@ -226,14 +233,13 @@ public class ThriftGUI extends JFrame {
 		statusBar.setLayout(new FlowLayout());
 		statusBar.add(sExchangeRateDisplay);
 		
-		JPanel pieChartInnerPanel = engine.getPieChart().getPieChartPanel();
+		JPanel pieChartInnerPanel = engine.getPieChart().getPieChartPanel(0, engine.getCalendar().getDate());
 		pieChartPanel = new JPanel(new BorderLayout());
 		pieChartPanel.setPreferredSize(new Dimension(540, 290));
 		pieChartPanel.add(pieChartInnerPanel, BorderLayout.CENTER);
 
 		pieChartOptionPanelUp.setLayout(new FlowLayout());
 		pieChartOptionPanelUp.add(new JLabel(Messages.getString("ThriftGUI.PieChart"))); //$NON-NLS-1$
-		JComboBox pieChartOptionComboBox = new JComboBox();
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.AllByCategory")); //$NON-NLS-1$
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.AllByAccount")); //$NON-NLS-1$
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.MonthByCategory")); //$NON-NLS-1$
@@ -242,7 +248,15 @@ public class ThriftGUI extends JFrame {
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.WeekByAccount")); //$NON-NLS-1$
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.DayByCategory")); //$NON-NLS-1$
 		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.DayByAccount")); //$NON-NLS-1$
+		pieChartOptionComboBox.addItem(Messages.getString("ThriftGUI.AccordToFilter")); //$NON-NLS-1$
 		pieChartOptionComboBox.setToolTipText(Messages.getString("ThriftGUI.SetPieChartDisplay")); //$NON-NLS-1$
+		pieChartOptionComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//update the chart when clicked the combo box
+				updateTheChart();
+			}
+		});
 		pieChartOptionPanelUp.add(pieChartOptionComboBox);
 		pieChartOptionPanelDown.setLayout(new FlowLayout());
 		JButton addEntry = new JButton("+"); //$NON-NLS-1$
@@ -370,7 +384,7 @@ public class ThriftGUI extends JFrame {
 		jFrame = new ThriftGUI();
 	}
 	
-	public JLabel getPieChartOptionPanelSum() {
+	public static JLabel getPieChartOptionPanelSum() {
 		return pieChartOptionPanelSum;
 	}
 	
@@ -378,6 +392,20 @@ public class ThriftGUI extends JFrame {
 		return pieChartPanel;
 	}
 
+	public int getComboSelectedIndex() {
+		return pieChartOptionComboBox.getSelectedIndex();
+	}
+
+	public void updateTheChart() {
+		if (engine != null) {
+			Utilities.log("Updating the chart.");
+			getPieChartPanel().removeAll();
+			getPieChartPanel().add(engine.getPieChart().
+					getPieChartPanel(getComboSelectedIndex(), engine.getCalendar().getDate()), BorderLayout.CENTER);
+			getPieChartPanel().validate();
+		}
+	}
+	
 	/**
 	 * The main method.
 	 * @param args the arguments

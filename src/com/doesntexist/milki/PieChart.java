@@ -2,7 +2,11 @@ package com.doesntexist.milki;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -36,29 +40,146 @@ public class PieChart {
 		this.accountList = accountList;
 	}
 	
-	private DefaultPieDataset getDataset() {
+	private DefaultPieDataset getDataset(int comboIndex, Calendar cal) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
+		Utilities.log("combo index:" + comboIndex);
+		String[] section = null;
+		double[] data = null;
 //		TODO deal with the combo box
-		/* if combo box ends with "·ÖÀà" */
-		String[] section = new String[categoryList.size()];
-		for (int i = 0; i < section.length; i++) {
-			section[i] = categoryList.get(i).getId();
-		}
-		double[] data = new double[section.length];
-		for (Entry e : this.data) {
-			if (e.isValid() == false) {
-				continue;
-			}
+		/* section string first */
+		if (comboIndex == 0 || comboIndex == 2 || comboIndex == 4 || comboIndex == 6) {
+			section = new String[categoryList.size()];
 			for (int i = 0; i < section.length; i++) {
-				if (e.getCategoryId().equals(section[i])) {
-					data[i] += e.getAmount();
+				section[i] = categoryList.get(i).getId();
+			}
+		} else {
+			section = new String[accountList.size()];
+			for (int i = 0; i < section.length; i++) {
+				section[i] = accountList.get(i).getId();
+			}
+		}
+		/* Then Data */
+		
+		/* All - Category */
+		/* All - Account */
+		if (comboIndex == 0 || comboIndex == 1) {
+			data = new double[section.length];
+			for (Entry e : this.data) {
+				if (e.isValid() == false) {
 					continue;
+				}
+				if (comboIndex == 0) {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getCategoryId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				} else {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getAccountId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				}
+			}
+		} else
+		/* Monthly - Category */
+		/* Monthly - Account */
+		if (comboIndex == 2 || comboIndex == 3) {
+			data = new double[section.length];
+			for (Entry e : this.data) {
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(e.getDate());
+				if (e.isValid() == false 
+						|| cal.get(Calendar.MONTH) != cal2.get(Calendar.MONTH)
+						|| cal.get(Calendar.YEAR) != cal2.get(Calendar.YEAR)) {
+					continue;
+				}
+				if (comboIndex == 2) {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getCategoryId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				} else {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getAccountId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				}
+			}
+		} else
+		/* Weekly*/
+		if (comboIndex == 4 || comboIndex == 5) {
+			data = new double[section.length];
+			for (Entry e : this.data) {
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(e.getDate());
+				if (e.isValid() == false 
+						|| cal.get(Calendar.WEEK_OF_YEAR) != cal2.get(Calendar.WEEK_OF_YEAR)
+						|| cal.get(Calendar.YEAR) != cal2.get(Calendar.YEAR)) {
+					continue;
+				}
+				if (comboIndex == 4) {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getCategoryId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				} else {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getAccountId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				}
+			}
+		} else
+		/* Daily */
+		if (comboIndex == 6 || comboIndex == 7) {
+			data = new double[section.length];
+			for (Entry e : this.data) {
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(e.getDate());
+				if (e.isValid() == false 
+						|| cal.get(Calendar.DAY_OF_YEAR) != cal2.get(Calendar.DAY_OF_YEAR)
+						|| cal.get(Calendar.YEAR) != cal2.get(Calendar.YEAR)) {
+					continue;
+				}
+				if (comboIndex == 6) {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getCategoryId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
+				} else {
+					for (int i = 0; i < section.length; i++) {
+						if (e.getAccountId().equals(section[i])) {
+							data[i] += e.getAmount();
+							break;
+						}
+					}
 				}
 			}
 		}
-		for (int i = 0; i < section.length; i++) {
-			dataset.setValue(section[i], data[i]);
+		
+		/* Generating dataset. */
+		double totalData = 0;
+		if (data != null) {
+			for (int i = 0; i < data.length; i++) {
+				dataset.setValue(section[i], data[i]);
+				totalData += data[i];
+			}
 		}
+		ThriftGUI.getPieChartOptionPanelSum().setText("$" + new DecimalFormat("0.00").format(totalData));
 		return dataset;
 	}
 	
@@ -82,9 +203,18 @@ public class PieChart {
 		return chart;   
 	}   
 
-	public  JPanel getPieChartPanel() {
+	public  JPanel getPieChartPanel(int comboIndex, String dateStr) {
 		Utilities.log("Generating pie chart..."); //$NON-NLS-1$
-		JFreeChart chart = createChart(getDataset());
+		Date date = new Date();
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr); //$NON-NLS-1$
+		} catch (ParseException e) {
+			e.printStackTrace();
+			Utilities.log("Error parsing date from JCalendar."); //$NON-NLS-1$
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		JFreeChart chart = createChart(getDataset(comboIndex, cal));
 		chart.setBackgroundPaint(null);
 		chart.getLegend().setPosition(RectangleEdge.RIGHT);
 		
